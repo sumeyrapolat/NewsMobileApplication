@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.newsmobileapplication.ui.screens.FeedScreen
 import com.example.newsmobileapplication.ui.screens.LoginScreen
 import com.example.newsmobileapplication.ui.screens.SignUpScreen
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
@@ -23,6 +24,9 @@ fun Router(navController: NavHostController){
             val signInViewModel = hiltViewModel<LoginViewModel>()
             LoginScreen(navController, signInViewModel)
         }
+
+        composable("feed") { FeedScreen(navController) }
+
     }
 
 }
