@@ -21,7 +21,7 @@ class LoginViewModel @Inject constructor(
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState = _loginState.asStateFlow()
 
-    fun signIn(email: String, password: String, onSuccess: () -> Unit) {
+    fun login(email: String, password: String, onSuccess: () -> Unit) {
         Log.d("SignInViewModel", "signIn called with email: $email")
         _loginState.value = LoginState.Loading
         viewModelScope.launch {
