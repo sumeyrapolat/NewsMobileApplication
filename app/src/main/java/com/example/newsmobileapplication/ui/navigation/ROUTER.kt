@@ -25,7 +25,13 @@ fun Router(navController: NavHostController){
             LoginScreen(navController, signInViewModel)
         }
 
-        composable("feed") { FeedScreen(navController) }
+        composable("feed") {
+            FeedScreen(navController)
+        }
+
+        composable("favorite"){
+            FeedScreen(navController)
+        }
 
     }
 
