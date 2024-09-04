@@ -47,7 +47,6 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-
     private fun saveUserToFirestore(userID: String, firstName: String, lastName: String, email: String) {
         val signUpUser = User(firstName = firstName, lastName = lastName, email = email)
         Log.d("SignUpViewModel", "Saving User: $signUpUser with ID: $userID")
@@ -68,7 +67,6 @@ class SignUpViewModel @Inject constructor(
     }
 }
 
-
 // Kayıt durumu için durum sınıfları
 sealed class SignUpState {
     object Idle : SignUpState()
@@ -76,4 +74,3 @@ sealed class SignUpState {
     data class Success(val message: String) : SignUpState()
     data class Error(val error: String) : SignUpState()
 }
-

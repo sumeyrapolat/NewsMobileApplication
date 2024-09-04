@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 // Router'ı çağırarak navigasyonu başlatıyoruz
-                Router(navHostController = navController)
+                Router(navController = navController)
             }
         }
     }

@@ -3,33 +3,15 @@ package com.example.newsmobileapplication.ui.screens
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -48,19 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.newsmobileapplication.ui.theme.DarkerLightPurple
-import com.example.newsmobileapplication.ui.theme.DarkerPastelPink
-import com.example.newsmobileapplication.ui.theme.LightBlue
-import com.example.newsmobileapplication.ui.theme.LightPurple
-import com.example.newsmobileapplication.ui.theme.MediumBlue
-import com.example.newsmobileapplication.ui.theme.PastelPink
-import com.example.newsmobileapplication.ui.theme.PastelYellow
+import com.example.newsmobileapplication.ui.theme.*
 import com.example.newsmobileapplication.viewmodel.SignUpState
 import com.example.newsmobileapplication.viewmodel.SignUpViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hiltViewModel()){
-
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hiltViewModel()) {
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
@@ -74,6 +49,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
     val backgroundGradient = Brush.linearGradient(
         colors = listOf(LightPurple, PastelPink, PastelYellow, PastelPink, LightBlue),
         start = Offset(0f, 0f),
@@ -152,7 +128,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             imeAction = ImeAction.Next
                         ),
                         keyboardActions = KeyboardActions(
-                            onNext = {  emailFocusRequester.requestFocus() }
+                            onNext = { emailFocusRequester.requestFocus() }
                         )
                     )
                     Spacer(modifier = Modifier.height(18.dp))
@@ -168,7 +144,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             imeAction = ImeAction.Next
                         ),
                         keyboardActions = KeyboardActions(
-                            onNext = {passwordFocusRequester.requestFocus() }
+                            onNext = { passwordFocusRequester.requestFocus() }
                         )
                     )
                     Spacer(modifier = Modifier.height(18.dp))
@@ -245,12 +221,11 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             containerColor = Color.Transparent,
                             contentColor = Color.White
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .background(
                                 Brush.linearGradient(
-                                    colors = listOf(  DarkerPastelPink,
-                                        MediumBlue.copy(alpha = 0.6f),
-                                        DarkerPastelPink),
+                                    colors = listOf(DarkerPastelPink, MediumBlue.copy(alpha = 0.6f), DarkerPastelPink),
                                     start = Offset(0f, 0f),
                                     end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
                                 ),
@@ -261,7 +236,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    TextButton(onClick = { navController.navigate("signin") }) {
+                    TextButton(onClick = { navController.navigate("login") }) {
                         Text(
                             text = "Already have an account? Login here!",
                             fontSize = 16.sp,
@@ -280,11 +255,13 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+                Log.d("SignUpScreen", "Current SignUpState: ${signUpState.value}")
             }
         }
         is SignUpState.Success -> {
             Toast.makeText(context, (signUpState.value as SignUpState.Success).message, Toast.LENGTH_LONG).show()
-            navController.navigate("signin") {
+            Log.d("SignUpScreen", "Navigating to signin")
+            navController.navigate("login") {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
                 }

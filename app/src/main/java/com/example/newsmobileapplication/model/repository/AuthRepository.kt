@@ -12,6 +12,9 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+
+
+
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
@@ -102,4 +105,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    fun getProfilePhotoUrl(): String? {
+        return cachedUserData?.profilePhotoUrl
+    }
 }
