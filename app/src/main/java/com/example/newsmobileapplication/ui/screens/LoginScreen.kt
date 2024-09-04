@@ -3,36 +3,15 @@ package com.example.newsmobileapplication.ui.screens
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -51,64 +30,47 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.newsmobileapplication.ui.theme.DarkerLightPurple
-import com.example.newsmobileapplication.ui.theme.DarkerPastelPink
-import com.example.newsmobileapplication.ui.theme.LightBlue
-import com.example.newsmobileapplication.ui.theme.LightPurple
-import com.example.newsmobileapplication.ui.theme.MediumBlue
-import com.example.newsmobileapplication.ui.theme.PastelPink
-import com.example.newsmobileapplication.ui.theme.PastelYellow
+import com.example.newsmobileapplication.data.preferences.PreferencesManager
+import com.example.newsmobileapplication.ui.theme.*
 import com.example.newsmobileapplication.viewmodel.AuthViewModel
 import com.example.newsmobileapplication.viewmodel.LoginState
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
 
-
-
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltViewModel(), authViewModel: AuthViewModel = hiltViewModel()) {
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
+    preferencesManager: PreferencesManager = PreferencesManager(LocalContext.current)
+) {
 
-    val email = remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val email = remember { mutableStateOf(preferencesManager.getEmail() ?: "") }
     val password = remember { mutableStateOf("") }
     val passwordVisible = remember { mutableStateOf(false) }
     val showResetPasswordDialog = remember { mutableStateOf(false) }
+    val rememberMeChecked = remember { mutableStateOf(preferencesManager.isRememberMeChecked()) }
 
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
 
     val loginState = viewModel.loginState.collectAsState()
 
-    // Klavye kontrolcüsü
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // Snackbar host state
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Ekran boyutlarını alıyoruz
-    val context = LocalContext.current
-    val displayMetrics = context.resources.displayMetrics
-    val screenWidth = displayMetrics.widthPixels.toFloat()
-    val screenHeight = displayMetrics.heightPixels.toFloat()
-
     val backgroundGradient = Brush.linearGradient(
-        colors = listOf(
-            LightPurple,
-            PastelPink,
-            PastelYellow,
-            PastelPink,
-            LightBlue
-        ),
+        colors = listOf(LightPurple, PastelPink, PastelYellow, PastelPink, LightBlue),
         start = Offset(0f, 0f),
-        end = Offset(0f, screenHeight),
+        end = Offset(0f, context.resources.displayMetrics.heightPixels.toFloat()),
         tileMode = TileMode.Clamp
     )
 
     val radialOverlay = Brush.radialGradient(
-        colors = listOf(
-            Color(0xFFB8CEFF).copy(alpha = 0.7f),
-            Color.Transparent
-        ),
-        center = Offset(screenWidth / 2, screenHeight / 8),
-        radius = screenHeight / 5
+        colors = listOf(Color(0xFFB8CEFF).copy(alpha = 0.7f), Color.Transparent),
+        center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 8),
+        radius = context.resources.displayMetrics.heightPixels.toFloat() / 5
     )
 
     val buttonBackgroundColor = Brush.linearGradient(
@@ -201,17 +163,52 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                keyboardController?.hide() // Klavyeyi kapat
-                                //viewModel.signIn(email.value, password.value)
+                                keyboardController?.hide()
                             }
                         )
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Remember Me Checkbox bileşenini daha estetik hale getiriyoruz
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 8.dp, top = 8.dp)
+                    ) {
+                        Checkbox(
+                            checked = rememberMeChecked.value,
+                            onCheckedChange = { rememberMeChecked.value = it },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = LightBlue, // Seçili olduğunda checkbox rengi
+                                uncheckedColor = Color.Gray, // Seçilmediğinde checkbox rengi
+                                checkmarkColor = Color.White // Tik işaretinin rengi
+                            )
+                        )
+                        Spacer(modifier = Modifier.width(8.dp)) // Checkbox ile text arasına boşluk ekliyoruz
+                        Text(
+                            text = "Remember Me",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = DarkerLightPurple // Estetik bir text rengi seçiyoruz
+                        )
+                    }
+
+
                     Spacer(modifier = Modifier.height(30.dp))
+
                     Button(
                         onClick = {
                             if (password.value.length < 8) {
                                 Toast.makeText(context, "Password must be at least 8 characters!", Toast.LENGTH_SHORT).show()
                             } else {
+                                if (rememberMeChecked.value) {
+                                    preferencesManager.saveLoginData(email.value, true)
+                                } else {
+                                    preferencesManager.clearLoginData()
+                                }
                                 viewModel.login(email.value, password.value, onSuccess = {})
                             }
                         },
@@ -226,6 +223,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     ) {
                         Text(text = "Login", modifier = Modifier.padding(8.dp), fontSize = 18.sp)
                     }
+
                     Spacer(modifier = Modifier.height(20.dp))
                     TextButton(onClick = { navController.navigate("signup") }) {
                         Text(
@@ -248,14 +246,13 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                 }
             }
 
-            // Dialog for email input
             if (showResetPasswordDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showResetPasswordDialog.value = false },
                     title = {
                         Text(
                             "Reset Password",
-                            color = DarkerLightPurple, // Başlık rengi
+                            color = DarkerLightPurple,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -270,7 +267,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                             OutlinedTextField(
                                 value = email.value,
                                 onValueChange = { email.value = it },
-                                label = { Text("Email", color = Color.Gray) }, // Label rengi
+                                label = { Text("Email", color = Color.Gray) },
                                 modifier = Modifier.fillMaxWidth(),
                             )
                         }
@@ -282,7 +279,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                                 showResetPasswordDialog.value = false
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = DarkerLightPurple ,
+                                containerColor = DarkerLightPurple,
                                 contentColor = Color.White
                             )
                         ) {
@@ -295,15 +292,13 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                         ) {
                             Text(
                                 "Cancel",
-                                color = DarkerLightPurple // İptal butonunun metin rengi
+                                color = DarkerLightPurple
                             )
                         }
                     },
                     containerColor = Color.White.copy(0.9f),
                     shape = RoundedCornerShape(25.dp)
                 )
-
-
             }
 
             when (loginState.value) {
