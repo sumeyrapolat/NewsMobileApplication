@@ -1,6 +1,7 @@
 package com.example.newsmobileapplication.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -208,7 +209,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     Spacer(modifier = Modifier.height(30.dp))
                     Button(
                         onClick = {
-                            viewModel.signIn(email.value, password.value, onSuccess = {})
+                            if (password.value.length < 8) {
+                                Toast.makeText(context, "Password must be at least 8 characters!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                viewModel.login(email.value, password.value, onSuccess = {})
+                            }
                         },
                         shape = RoundedCornerShape(45.dp),
                         colors = ButtonDefaults.buttonColors(

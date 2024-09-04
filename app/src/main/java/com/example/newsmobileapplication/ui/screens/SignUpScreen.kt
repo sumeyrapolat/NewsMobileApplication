@@ -63,6 +63,30 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
     val passwordFocusRequester = remember { FocusRequester() }
     val confirmPasswordFocusRequester = remember { FocusRequester() }
 
+
+    fun isPasswordValid(password: String): Boolean {
+        // En az 8 karakter kontrolü
+        if (password.length < 8) {
+            return false
+        }
+
+        // Ardışık sayı kontrolü
+        for (i in 0 until password.length - 2) {
+            val first = password[i]
+            val second = password[i + 1]
+            val third = password[i + 2]
+
+            // Ardışık sayılar kontrolü
+            if (first.isDigit() && second.isDigit() && third.isDigit()) {
+                if (second - first == 1 && third - second == 1) {
+                    return false // Ardışık sayılar bulundu
+                }
+            }
+        }
+
+        return true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -210,7 +234,9 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                     Spacer(modifier = Modifier.height(30.dp))
                     Button(
                         onClick = {
-                            if (password.value == confirmPassword.value) {
+                            if (!isPasswordValid(password.value)) {
+                                Toast.makeText(context, "Password must be at least 8 characters long and not contain sequential numbers!", Toast.LENGTH_SHORT).show()
+                            } else if (password.value == confirmPassword.value) {
                                 viewModel.signUp(email.value, password.value, firstName.value, lastName.value)
                             } else {
                                 Toast.makeText(context, "Passwords do not match!", Toast.LENGTH_SHORT).show()
