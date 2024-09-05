@@ -51,11 +51,32 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val backgroundGradient = Brush.linearGradient(
-        colors = listOf(LightPurple, PastelPink, PastelYellow, PastelPink, LightBlue),
+        colors = listOf(
+            Martinique,
+            GrayBlue,
+            Bej,
+        ),
         start = Offset(0f, 0f),
         end = Offset(0f, context.resources.displayMetrics.heightPixels.toFloat()),
         tileMode = TileMode.Clamp
     )
+
+    val radialOverlay = Brush.radialGradient(
+        colors = listOf(Redwood.copy(alpha = 0.6f), Color.Transparent),
+        center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 5),
+        radius = context.resources.displayMetrics.heightPixels.toFloat() / 3
+    )
+
+    val buttonBackgroundColor = Brush.linearGradient(
+        colors = listOf(
+            Redwood,
+            DarkBrown,
+            Redwood
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+    )
+
 
     val firstNameFocusRequester = remember { FocusRequester() }
     val lastNameFocusRequester = remember { FocusRequester() }
@@ -95,20 +116,16 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color(0xFFB8CEFF).copy(alpha = 0.7f), Color.Transparent),
-                        center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 8),
-                        radius = context.resources.displayMetrics.heightPixels.toFloat() / 5
-                    )
-                ),
+                .background(radialOverlay),
             contentAlignment = Alignment.BottomCenter
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
-                colors = CardDefaults.cardColors(Color.White.copy(alpha = 0.5f))
-            ) {
+                colors = CardDefaults.cardColors(
+                    containerColor = (Color.White.copy(0.8f))
+                ))
+            {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 40.dp)
@@ -119,7 +136,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                         text = "Sign Up",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = DarkerLightPurple
+                        color = Redwood
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -249,14 +266,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(DarkerPastelPink, MediumBlue.copy(alpha = 0.6f), DarkerPastelPink),
-                                    start = Offset(0f, 0f),
-                                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                                ),
-                                shape = RoundedCornerShape(45.dp)
-                            )
+                            .background(buttonBackgroundColor, shape = RoundedCornerShape(45.dp))
                     ) {
                         Text(text = "Sign Up", modifier = Modifier.padding(8.dp), fontSize = 18.sp)
                     }
@@ -266,7 +276,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                         Text(
                             text = "Already have an account? Login here!",
                             fontSize = 16.sp,
-                            color = DarkerLightPurple
+                            color = Redwood
                         )
                     }
                 }
@@ -303,3 +313,5 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
         }
     }
 }
+
+

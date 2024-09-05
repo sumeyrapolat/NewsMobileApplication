@@ -14,7 +14,7 @@ import com.example.newsmobileapplication.viewmodel.SignUpViewModel
 @Composable
 fun Router(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = "signup"  ) {
+    NavHost(navController = navController, startDestination = "login"  ) {
 
         composable("signup") {
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
