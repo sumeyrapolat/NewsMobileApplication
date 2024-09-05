@@ -15,13 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.newsmobileapplication.ui.components.BottomBar
+import com.example.newsmobileapplication.ui.components.BottomNavItem
 import com.example.newsmobileapplication.ui.navigation.Router
 import com.example.newsmobileapplication.ui.theme.NewsMobileApplicationTheme
+import com.example.newsmobileapplication.ui.theme.Redwood
 import dagger.hilt.android.AndroidEntryPoint
-
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,21 +46,38 @@ fun MainScreen(navController: NavHostController) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
 
+    // Define the two Bottom Navigation items (Home and Favorites)
+    val bottomNavItems = listOf(
+        BottomNavItem(
+            route = "feed",
+            icon = Icons.Filled.Home,
+            label = "Home",
+            onClick = { navController.navigate("feed") }
+        ),
+        BottomNavItem(
+            route = "favorites",
+            icon = Icons.Filled.Favorite,
+            label = "Favorites",
+            onClick = { navController.navigate("favorites") }
+        )
+    )
+
     Scaffold(
         topBar = {
             if (currentDestination == "feed" || currentDestination == "favorites") {
                 TopAppBar(
-                    title = { Text("NewsRubu+") },
+                    title = { Text("NewsRubu+", fontWeight = FontWeight.SemiBold) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White, // Beyaz arka plan
-                        titleContentColor = Color.Black // Siyah başlık rengi
+                        containerColor = Redwood, // Background color
+                        titleContentColor = Color.White // Title text color
                     )
                 )
             }
         },
         bottomBar = {
             if (currentDestination == "feed" || currentDestination == "favorites") {
-                BottomBar(navController = navController)
+                // Pass bottom navigation items to the BottomBar
+                BottomBar(navController = navController, bottomNavItems = bottomNavItems, onItemClick = { navController.navigate(it) })
             }
         },
         content = { paddingValues ->
@@ -72,42 +92,3 @@ fun MainScreen(navController: NavHostController) {
     )
 }
 
-@Composable
-fun BottomBar(navController: NavHostController) {
-    val currentDestination by navController.currentBackStackEntryAsState()
-
-    BottomNavigation(
-        backgroundColor = Color.White, // Beyaz arka plan
-    ) {
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            selected = currentDestination?.destination?.route == "feed",
-            selectedContentColor = Color.Black,  // Seçili ikon siyah
-            unselectedContentColor = Color.Gray, // Seçili olmayan ikon gri
-            onClick = {
-                if (currentDestination?.destination?.route != "feed") {
-                    navController.navigate("feed") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") },
-            selected = currentDestination?.destination?.route == "favorites",
-            selectedContentColor = Color.Black,  // Seçili ikon siyah
-            unselectedContentColor = Color.Gray, // Seçili olmayan ikon gri
-            onClick = {
-                if (currentDestination?.destination?.route != "favorites") {
-                    navController.navigate("favorites") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
-        )
-    }
-}
