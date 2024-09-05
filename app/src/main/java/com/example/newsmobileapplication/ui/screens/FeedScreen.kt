@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.newsmobileapplication.ui.components.NewsCardComponent
+import com.example.newsmobileapplication.utils.generateNewsItemId
 import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
 @Composable
@@ -18,13 +19,14 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
     LazyColumn {
         if (newsItems != null) {
             items(newsItems!!) { newsItem ->
+                val newsItemId = generateNewsItemId(newsItem.title, newsItem.publishedAt)
                 NewsCardComponent(
                     newsTitle = newsItem.title,
                     newsSummary = newsItem.description ?: "No summary available",
-                    newsImageUrl = newsItem.urlToImage  ?: "",
+                    newsImageUrl = newsItem.urlToImage ?: "",
                     onClick = {
-                        // Habere tıklayınca detay sayfasına gitmek için
-                        // navController.navigate("newsDetail/${newsItem.id}")
+                        // Navigate to NewsDetailScreen with the generated ID
+                        navController.navigate("newsDetail/$newsItemId")
                     }
                 )
             }

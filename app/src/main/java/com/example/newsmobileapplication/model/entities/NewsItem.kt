@@ -1,11 +1,14 @@
 package com.example.newsmobileapplication.model.entities
 
+
 data class NewsItem(
-    val title: String,       // Haber başlığı
-    val description: String?, // Haber özeti (null olabilir)
-    val urlToImage: String?,  // Haber görseli URL'si
-    val content: String?,     // Haber içeriği (Detay sayfası için)
-    val url: String           // Haber kaynağının orijinal URL'si
+    val title: String,
+    val description: String?,
+    val urlToImage: String?,
+    val content: String?,
+    val author: String?,
+    val publishedAt: String,
+    val id: String // ID must be provided
 )
 
 data class NewsResponse(
