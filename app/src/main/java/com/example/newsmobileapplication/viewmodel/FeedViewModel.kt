@@ -25,6 +25,12 @@ class FeedViewModel @Inject constructor(
     private val _newsItems = MutableStateFlow<List<NewsItem>?>(null)
     val newsItems: StateFlow<List<NewsItem>?> = _newsItems
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     init {
         fetchTopStories("technology")  // Varsayılan olarak teknoloji haberleri çekiyoruz
     }
@@ -44,25 +50,19 @@ class FeedViewModel @Inject constructor(
     // Haberleri çekmek için getTopStories çağırıyoruz
     private fun fetchTopStories(section: String) {
         viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null // Reset error message before each fetch
+
             try {
                 val news = repository.getNews(section)?.map { newsItem ->
-                    // Her haber için URL'ye göre ID oluşturuyoruz
                     val generatedId = generateNewsItemId(newsItem.url)
-                    Log.d("FeedViewModel", "Generated ID for news item '${newsItem.title}': $generatedId")
                     newsItem.copy(id = generatedId)
                 }
-
-                // Haberleri filtreleyip _newsItems StateFlow'u güncelliyoruz
-                _newsItems.value = news?.filter { isLatinAlphabet(it.title) }
-
-                if (_newsItems.value.isNullOrEmpty()) {
-                    Log.d("FeedViewModel", "No news available")
-                } else {
-                    Log.d("FeedViewModel", "News items fetched successfully")
-                }
-
+                _newsItems.value = news
             } catch (e: Exception) {
-                Log.e("FeedViewModel", "Error fetching news: ${e.message}", e)
+                _errorMessage.value = "Error fetching news: ${e.message}"
+            } finally {
+                _isLoading.value = false
             }
         }
     }

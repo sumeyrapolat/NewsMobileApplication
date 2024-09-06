@@ -7,6 +7,7 @@ data class NewsItem(
     val published_date: String,       // Published date of the article
     val url: String,                  // URL of the article
     val multimedia: List<Multimedia>?,// List of multimedia (images)
+    val section: String,              // Section of the article (e.g. 'Technology')
     val id: String                    // Generated unique ID
 )
 
