@@ -12,7 +12,7 @@ class FeedRepository @Inject constructor(
         val response = apiService.getTopStories(section = section)
         if (response.isSuccessful) {
             Log.d("FeedRepository", "API Response: ${response.body()?.results}")
-            return response.body()?.results?.take(10) // İlk 10 haberi alıyoruz
+            return response.body()?.results?.take(5) // İlk 10 haberi alıyoruz
         } else {
             Log.e("FeedRepository", "API call failed: ${response.errorBody()?.string()}")
             return null

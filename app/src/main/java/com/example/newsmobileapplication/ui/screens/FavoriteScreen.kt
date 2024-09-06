@@ -20,7 +20,7 @@ fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hilt
             FavoriteCardComponent(
                 newsTitle = newsItem.title,
                 newsContent = newsItem.abstract ?: "No content available",  // abstract alanı kullanılıyor
-                newsImageUrl = imageUrl ?: "",  // multimedia listesindeki görseli kullan
+                newsSection = newsItem.section,
                 onClick = {
                     // Habere tıklayınca detay sayfasına gitme işlemi
                     navController.navigate("newsDetail/${newsItem.id}")
