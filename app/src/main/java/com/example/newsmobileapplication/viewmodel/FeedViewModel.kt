@@ -11,9 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +22,9 @@ class FeedViewModel @Inject constructor(
     private val _newsItems = MutableStateFlow<List<NewsItem>?>(null)
     val newsItems: StateFlow<List<NewsItem>?> = _newsItems
 
+    private val _favoriteNewsItems = MutableStateFlow<List<NewsItem>>(emptyList())
+    val favoriteNewsItems: StateFlow<List<NewsItem>> = _favoriteNewsItems
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -33,13 +33,27 @@ class FeedViewModel @Inject constructor(
 
     init {
         fetchTopStories("technology")  // Varsayılan olarak teknoloji haberleri çekiyoruz
+        loadFavorites()  // Favori haberleri başlatma sırasında yükleyelim
     }
 
+    // Favori ekleme/çıkarma işlemi
     fun toggleFavorite(newsId: String) {
-        if (favoriteManager.isFavorite(newsId)) {
-            favoriteManager.removeFavorite(newsId)
-        } else {
-            favoriteManager.addFavorite(newsId)
+        viewModelScope.launch {
+            if (favoriteManager.isFavorite(newsId)) {
+                favoriteManager.removeFavorite(newsId)
+            } else {
+                favoriteManager.addFavorite(newsId)
+            }
+            // Favori haberlerin güncellenmesi
+            loadFavorites()
+        }
+    }
+
+    // Favori haberleri yükleme
+    private fun loadFavorites() {
+        viewModelScope.launch {
+            val favoriteIds = favoriteManager.getFavorites()
+            _favoriteNewsItems.value = _newsItems.value?.filter { it.id in favoriteIds } ?: emptyList()
         }
     }
 
@@ -48,7 +62,7 @@ class FeedViewModel @Inject constructor(
     }
 
     // Haberleri çekmek için getTopStories çağırıyoruz
-    private fun fetchTopStories(section: String) {
+    fun fetchTopStories(section: String) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null // Reset error message before each fetch
@@ -59,16 +73,13 @@ class FeedViewModel @Inject constructor(
                     newsItem.copy(id = generatedId)
                 }
                 _newsItems.value = news
+                loadFavorites()  // Favorilerdeki haberlerin güncellenmesi
             } catch (e: Exception) {
                 _errorMessage.value = "Error fetching news: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
         }
-    }
-
-    fun isLatinAlphabet(text: String): Boolean {
-        return text.all { it in '\u0000'..'\u007F' }
     }
 
     // URL'ye göre haber çekiyoruz
@@ -78,12 +89,15 @@ class FeedViewModel @Inject constructor(
         return newsItem
     }
 
+    // Favori haberleri alma
     fun getFavoriteNewsItems(): List<NewsItem> {
-        val favoriteIds = favoriteManager.getFavorites()
-        return newsItems.value?.filter { it.id in favoriteIds } ?: emptyList()
+        return _favoriteNewsItems.value
     }
 
     fun removeFavorite(newsId: String) {
-        favoriteManager.removeFavorite(newsId)
+        viewModelScope.launch {
+            favoriteManager.removeFavorite(newsId)
+            loadFavorites()  // Favoriler güncelleniyor
+        }
     }
 }
