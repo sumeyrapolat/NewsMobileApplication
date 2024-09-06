@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.newsmobileapplication.ui.screens.CategoryScreen
 import com.example.newsmobileapplication.ui.screens.FavoriteScreen
 import com.example.newsmobileapplication.ui.screens.FeedScreen
 import com.example.newsmobileapplication.ui.screens.LoginScreen
@@ -47,5 +48,9 @@ fun Router(navController: NavHostController){
             val newsItemId = backStackEntry.arguments?.getString("newsItemId")
             NewsDetailScreen(navController = navController, newsItemId = newsItemId ?: "")
         }
+        composable("category") {
+            CategoryScreen(navController)
+        }
+
     }
 }

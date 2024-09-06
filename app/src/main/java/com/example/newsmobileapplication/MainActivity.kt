@@ -10,6 +10,8 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PersonSearch
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,7 +48,7 @@ fun MainScreen(navController: NavHostController) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
 
-    // Define the two Bottom Navigation items (Home and Favorites)
+    // Define the two Bottom Navigation items (Home, Favorites, and Category)
     val bottomNavItems = listOf(
         BottomNavItem(
             route = "feed",
@@ -55,16 +57,23 @@ fun MainScreen(navController: NavHostController) {
             onClick = { navController.navigate("feed") }
         ),
         BottomNavItem(
+            route = "category",  // Category route corrected
+            icon = Icons.Filled.Search,
+            label = "Category",
+            onClick = { navController.navigate("category") }  // Navigate to the correct "category" route
+        ),
+        BottomNavItem(
             route = "favorites",
             icon = Icons.Filled.Favorite,
             label = "Favorites",
             onClick = { navController.navigate("favorites") }
         )
+
     )
 
     Scaffold(
         topBar = {
-            if (currentDestination == "feed" || currentDestination == "favorites") {
+            if (currentDestination == "feed" || currentDestination == "favorites" || currentDestination == "category") {
                 TopAppBar(
                     title = { Text("NewsRubu+", fontWeight = FontWeight.SemiBold) },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -75,7 +84,7 @@ fun MainScreen(navController: NavHostController) {
             }
         },
         bottomBar = {
-            if (currentDestination == "feed" || currentDestination == "favorites") {
+            if (currentDestination == "feed" || currentDestination == "favorites" || currentDestination == "category") {
                 // Pass bottom navigation items to the BottomBar
                 BottomBar(navController = navController, bottomNavItems = bottomNavItems, onItemClick = { navController.navigate(it) })
             }
@@ -91,4 +100,3 @@ fun MainScreen(navController: NavHostController) {
         }
     )
 }
-
