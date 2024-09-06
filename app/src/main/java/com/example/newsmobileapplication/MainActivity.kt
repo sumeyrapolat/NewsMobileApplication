@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PersonSearch
@@ -64,7 +65,7 @@ fun MainScreen(navController: NavHostController) {
         ),
         BottomNavItem(
             route = "favorites",
-            icon = Icons.Filled.Favorite,
+            icon = Icons.Filled.Bookmarks,
             label = "Favorites",
             onClick = { navController.navigate("favorites") }
         )
