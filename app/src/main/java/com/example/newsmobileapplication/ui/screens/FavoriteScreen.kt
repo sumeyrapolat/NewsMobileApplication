@@ -14,10 +14,13 @@ fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hilt
 
     LazyColumn {
         items(favoriteNewsItems) { newsItem ->
+            // multimedia listesinden ilk görseli alıyoruz
+            val imageUrl = newsItem.multimedia?.firstOrNull()?.url
+
             FavoriteCardComponent(
                 newsTitle = newsItem.title,
-                newsContent = newsItem.content ?: "No content available",
-                newsImageUrl = newsItem.urlToImage ?: "",
+                newsContent = newsItem.abstract ?: "No content available",  // abstract alanı kullanılıyor
+                newsImageUrl = imageUrl ?: "",  // multimedia listesindeki görseli kullan
                 onClick = {
                     // Habere tıklayınca detay sayfasına gitme işlemi
                     navController.navigate("newsDetail/${newsItem.id}")

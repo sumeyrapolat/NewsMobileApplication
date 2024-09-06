@@ -12,6 +12,7 @@ import com.example.newsmobileapplication.ui.components.NewsCardComponent
 import com.example.newsmobileapplication.utils.generateNewsItemId
 import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
+
 @Composable
 fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltViewModel()) {
     val newsItems by viewModel.newsItems.collectAsState()
@@ -19,13 +20,18 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
     LazyColumn {
         if (newsItems != null) {
             items(newsItems!!) { newsItem ->
-                val newsItemId = generateNewsItemId(newsItem.title, newsItem.publishedAt)
+                // Haberlerin URL'sine göre benzersiz bir ID oluşturuyoruz
+                val newsItemId = generateNewsItemId(newsItem.url)
+
+                // İlk görseli almak için multimedia listesini kontrol edin
+                val newsImageUrl = newsItem.multimedia?.firstOrNull()?.url ?: ""
+
                 NewsCardComponent(
                     newsTitle = newsItem.title,
-                    newsSummary = newsItem.description ?: "No summary available",
-                    newsImageUrl = newsItem.urlToImage ?: "",
+                    newsSummary = newsItem.abstract ?: "No summary available", // 'abstract' özeti temsil ediyor
+                    newsImageUrl = newsImageUrl, // İlk görselin URL'si alınıyor
                     onClick = {
-                        // Navigate to NewsDetailScreen with the generated ID
+                        // Haber detay sayfasına URL üzerinden yönlendirme yapıyoruz
                         navController.navigate("newsDetail/$newsItemId")
                     }
                 )
