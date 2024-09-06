@@ -71,7 +71,7 @@ fun NewsCardComponent(
                 text = newsSummary,
                 fontSize = 14.sp,
                 color = Color.Gray,
-                maxLines = 3,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
             )

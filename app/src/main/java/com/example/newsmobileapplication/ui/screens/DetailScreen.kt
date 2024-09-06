@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.viewmodel.FeedViewModel
+
 @Composable
 fun NewsDetailScreen(
     navController: NavController,
@@ -44,7 +45,6 @@ fun NewsDetailScreen(
     val isFavorite = remember { mutableStateOf(viewModel.isFavorite(newsItemId)) }
 
     if (newsItem == null) {
-        // Show a loading or error message if newsItem is null
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -52,18 +52,23 @@ fun NewsDetailScreen(
             Text(text = "Loading news details...", color = Color.Gray, fontSize = 18.sp)
         }
     } else {
-        // Display the news item details as before
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = rememberImagePainter(data = newsItem.urlToImage),
-                contentDescription = "News Image",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer { alpha = 0.8f },
-                contentScale = ContentScale.Crop
-            )
+        // Feed ekranındaki gibi görseli multimedia'dan alalım
+        val newsImageUrl = newsItem.multimedia?.firstOrNull()?.url
 
-            // Back button
+        // Detay ekranını oluşturuyoruz
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (newsImageUrl!!.isNotEmpty()) {
+                Image(
+                    painter = rememberImagePainter(data = newsImageUrl),
+                    contentDescription = "News Image",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer { alpha = 0.8f },
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            // Geri butonu
             IconButton(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -75,7 +80,7 @@ fun NewsDetailScreen(
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
             }
 
-            // Favorite button
+            // Favorilere ekleme butonu
             IconButton(
                 onClick = {
                     viewModel.toggleFavorite(newsItemId)
@@ -83,7 +88,7 @@ fun NewsDetailScreen(
                 },
                 modifier = Modifier
                     .padding(16.dp)
-                    .align(Alignment.TopEnd)  // Position it to the top right
+                    .align(Alignment.TopEnd)
                     .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(50))
                     .size(40.dp)
             ) {
@@ -94,7 +99,7 @@ fun NewsDetailScreen(
                 )
             }
 
-            // Card for the news details
+            // Haber detaylarının bulunduğu kart
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -104,7 +109,7 @@ fun NewsDetailScreen(
             ) {
                 LazyColumn(modifier = Modifier.padding(16.dp)) {
                     item {
-                        // Title of the news
+                        // Haber başlığı
                         Text(
                             text = newsItem.title,
                             fontSize = 20.sp,
@@ -113,19 +118,28 @@ fun NewsDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Author
+                        // Yazar bilgisi
                         Text(
-                            text = "By ${newsItem.author ?: "Unknown author"}",
+                            text = "By ${newsItem.byline ?: "Unknown author"}",
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Content of the news (no maxLines limitation)
+                        // Haber özeti (abstract)
                         Text(
-                            text = newsItem.content ?: "No content available",
+                            text = newsItem.abstract ?: "No summary available",
                             fontSize = 16.sp,
                             color = Color.Black
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Haber detaylarına gitmek için URL
+                        Text(
+                            text = "Read more: ${newsItem.url}",
+                            fontSize = 14.sp,
+                            color = Color.Blue
                         )
                     }
                 }

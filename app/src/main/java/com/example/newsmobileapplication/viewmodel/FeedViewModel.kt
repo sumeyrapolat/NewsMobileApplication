@@ -26,7 +26,7 @@ class FeedViewModel @Inject constructor(
     val newsItems: StateFlow<List<NewsItem>?> = _newsItems
 
     init {
-        fetchNews()
+        fetchTopStories("technology")  // Varsayılan olarak teknoloji haberleri çekiyoruz
     }
 
     fun toggleFavorite(newsId: String) {
@@ -41,35 +41,37 @@ class FeedViewModel @Inject constructor(
         return favoriteManager.isFavorite(newsId)
     }
 
-    private fun fetchNews() {
+    // Haberleri çekmek için getTopStories çağırıyoruz
+    private fun fetchTopStories(section: String) {
         viewModelScope.launch {
-            val yesterdayDate = getYesterdayDate()
-            val news = repository.getNews(from = yesterdayDate)?.map { newsItem ->
-                // Generate ID for each news item
-                newsItem.copy(id = generateNewsItemId(newsItem.title, newsItem.publishedAt))
-            }
+            try {
+                val news = repository.getNews(section)?.map { newsItem ->
+                    // Her haber için URL'ye göre ID oluşturuyoruz
+                    val generatedId = generateNewsItemId(newsItem.url)
+                    Log.d("FeedViewModel", "Generated ID for news item '${newsItem.title}': $generatedId")
+                    newsItem.copy(id = generatedId)
+                }
 
-            // Apply the filter and store the news items
-            _newsItems.value = news?.filter { isLatinAlphabet(it.title) }
+                // Haberleri filtreleyip _newsItems StateFlow'u güncelliyoruz
+                _newsItems.value = news?.filter { isLatinAlphabet(it.title) }
 
-            // Log each news item and its id
-            _newsItems.value?.forEach { newsItem ->
-                Log.d("FeedViewModel", "NewsItem: ${newsItem.title}, id: ${newsItem.id}")
+                if (_newsItems.value.isNullOrEmpty()) {
+                    Log.d("FeedViewModel", "No news available")
+                } else {
+                    Log.d("FeedViewModel", "News items fetched successfully")
+                }
+
+            } catch (e: Exception) {
+                Log.e("FeedViewModel", "Error fetching news: ${e.message}", e)
             }
         }
-    }
-
-    private fun getYesterdayDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DATE, -1)
-        return dateFormat.format(calendar.time)
     }
 
     fun isLatinAlphabet(text: String): Boolean {
         return text.all { it in '\u0000'..'\u007F' }
     }
 
+    // URL'ye göre haber çekiyoruz
     fun getNewsItemById(newsItemId: String): NewsItem? {
         val newsItem = newsItems.value?.find { it.id == newsItemId }
         Log.d("FeedViewModel", "Fetching newsItem with id: $newsItemId, found: $newsItem")
