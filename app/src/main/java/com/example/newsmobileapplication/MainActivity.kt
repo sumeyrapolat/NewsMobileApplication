@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsmobileapplication.ui.components.BottomBar
 import com.example.newsmobileapplication.ui.components.BottomNavItem
 import com.example.newsmobileapplication.ui.navigation.Router
+import com.example.newsmobileapplication.ui.theme.Martinique
 import com.example.newsmobileapplication.ui.theme.NewsMobileApplicationTheme
 import com.example.newsmobileapplication.ui.theme.Redwood
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,7 +79,7 @@ fun MainScreen(navController: NavHostController) {
                 TopAppBar(
                     title = { Text("NewsRubu+", fontWeight = FontWeight.SemiBold) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Redwood, // Background color
+                        containerColor = Martinique, // Background color
                         titleContentColor = Color.White // Title text color
                     )
                 )

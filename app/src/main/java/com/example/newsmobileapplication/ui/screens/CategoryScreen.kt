@@ -118,7 +118,7 @@ fun CategoryScreen(
                         newsContent = newsItem.abstract ?: "",
                         imageUrl = newsItem.multimedia?.firstOrNull()?.url,
                         onClick = {
-                            // Haber detayına gitme işlemi burada yapılabilir
+                            navController.navigate("newsDetail/${newsItem.id}")
                         }
                     )
                 }

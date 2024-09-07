@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.newsmobileapplication.ui.theme.KhasmirBlue
+import com.example.newsmobileapplication.ui.theme.Martinique
 import com.example.newsmobileapplication.ui.theme.Redwood
 
 @Composable
@@ -28,7 +30,7 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Redwood,
+                color = Martinique,
                 shape = RoundedCornerShape(20)
             )
     ) {
@@ -45,7 +47,7 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                         Icon(
                             item.icon,
                             contentDescription = item.route,
-                            tint = if (selected) Color.White else Color.Gray
+                            tint = if (selected) KhasmirBlue else Color.Gray
                         )
                     },
                     selected = selected,
@@ -55,9 +57,9 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
+                        selectedIconColor = KhasmirBlue,
                         unselectedIconColor = Color.Gray,
-                        indicatorColor = Redwood
+                        indicatorColor = Color.White
                     )
                 )
             }

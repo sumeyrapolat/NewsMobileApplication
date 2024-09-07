@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newsmobileapplication.ui.theme.KhasmirBlue
 import com.example.newsmobileapplication.ui.theme.Redwood
 
 @Composable
@@ -40,7 +41,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
         selectedTabIndex = selectedCategoryIndex,
         edgePadding = 14.dp,
         backgroundColor = Color.White,
-        contentColor = Color.Black,
+        contentColor = KhasmirBlue,
         indicator = { Box {} } // Boş Box ile indicator'ı kaldırıyoruz
     ) {
         categories.forEachIndexed { index, category ->
@@ -54,7 +55,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                     .padding(vertical = 4.dp, horizontal = 4.dp)
                     .clip(RoundedCornerShape(16.dp)) // Kenarları yuvarlak
                     .background(
-                        if (selectedCategoryIndex == index) Color.Black else Color.Transparent
+                        if (selectedCategoryIndex == index) KhasmirBlue else Color.Transparent
                     ), // Seçili olan kutucuğun arka planını belirliyoruz
                 text = {
                     Text(
