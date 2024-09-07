@@ -60,7 +60,7 @@ fun CategoryScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -69,18 +69,23 @@ fun CategoryScreen(
             }
             Text(
                 text = "Explore Categories",
-                fontSize = 28.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         // Arama çubuğu
         SearchBar(
             query = query,
             onQueryChange = { query = it },
+            onSearch = {
+                // Arama yapıldığında, CategoryViewModel'den API çağrısı yapıyoruz
+                viewModel.fetchNewsByCategory(query)
+            },
+            modifier = Modifier.fillMaxWidth(),
             placeholder = "Search for news..."
         )
 
@@ -92,7 +97,7 @@ fun CategoryScreen(
             viewModel.fetchNewsByCategory(selectedCategory)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Yükleniyorsa loading göstergesi
         if (isLoading) {
@@ -104,8 +109,8 @@ fun CategoryScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 items(newsItems ?: emptyList()) { newsItem ->
                     CategoryCardComponent(
