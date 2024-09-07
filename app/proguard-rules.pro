@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Prevent Gson model classes from being obfuscated
+-keep class com.example.newsmobileapplication.model.entities.** { *; }
+
+# Keep attributes used by Gson such as @SerializedName
+-keepattributes *Annotation*
+
+# Prevent Gson classes from being obfuscated
+-keep class com.google.gson.** { *; }
+
+# Preserve fields and members annotated with @SerializedName in model classes
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName *;
+}
+
+# Prevent issues related to generics by keeping signatures
+-keepattributes Signature
