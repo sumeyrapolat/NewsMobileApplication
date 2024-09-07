@@ -1,30 +1,32 @@
 package com.example.newsmobileapplication.model.entities
 
+import com.google.gson.annotations.SerializedName
+
 data class NewsItem(
-    val title: String,                // Article title
-    val abstract: String?,            // Summary/description of the article (NY Times uses 'abstract')
-    val byline: String?,              // Author of the article
-    val published_date: String,       // Published date of the article
-    val url: String,                  // URL of the article
-    val multimedia: List<Multimedia>?,// List of multimedia (images)
-    val section: String,              // Section of the article (e.g. 'Technology')
-    val id: String                    // Generated unique ID
+    @SerializedName("title") val title: String,
+    @SerializedName("abstract") val abstract: String?,
+    @SerializedName("byline") val byline: String?,
+    @SerializedName("published_date") val publishedDate: String,
+    @SerializedName("url") val url: String,
+    @SerializedName("multimedia") val multimedia: List<Multimedia>?,
+    @SerializedName("section") val section: String,
+    @SerializedName("id") val id: String
 )
 
 data class NewsResponse(
-    val status: String,               // Status of the response
-    val section: String,              // The section of the articles (e.g. 'technology')
-    val num_results: Int,             // Number of results returned
-    val results: List<NewsItem>       // List of articles
+    @SerializedName("status") val status: String,
+    @SerializedName("section") val section: String,
+    @SerializedName("num_results") val numResults: Int,
+    @SerializedName("results") val results: List<NewsItem>
 )
 
 data class Multimedia(
-    val url: String?,                 // URL of the multimedia (image)
-    val format: String?,              // Format/type of multimedia (e.g. 'Standard Thumbnail')
-    val height: Int?,                 // Height of the image
-    val width: Int?,                  // Width of the image
-    val type: String?,                // Type of media (e.g. image)
-    val subtype: String?,             // Subtype of media (e.g. photo)
-    val caption: String?,             // Caption of the multimedia
-    val copyright: String?            // Copyright information
+    @SerializedName("url") val url: String?,
+    @SerializedName("format") val format: String?,
+    @SerializedName("height") val height: Int?,
+    @SerializedName("width") val width: Int?,
+    @SerializedName("type") val type: String?,
+    @SerializedName("subtype") val subtype: String?,
+    @SerializedName("caption") val caption: String?,
+    @SerializedName("copyright") val copyright: String?
 )
