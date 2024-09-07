@@ -57,6 +57,7 @@ fun CategoryCardComponent(
                     painter = rememberImagePainter(data = imageUrl),
                     contentDescription = null,
                     modifier = Modifier
+                        .weight(2f) // Görsel 2 birim yer kaplayacak
                         .size(100.dp) // Görselin genişlik ve yüksekliği sabit
                         .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
                         .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
@@ -66,7 +67,7 @@ fun CategoryCardComponent(
 
             // Başlık ve içerik için column
             Column(
-                modifier = Modifier.weight(1f) // Column'un kalan alanı kaplaması için
+                modifier = Modifier.weight(5f) // Başlık ve içerik 5 birim yer kaplayacak
             ) {
                 // Haber başlığı
                 Text(
@@ -85,7 +86,7 @@ fun CategoryCardComponent(
                     text = newsContent,
                     fontSize = 16.sp,
                     color = Color.Gray,
-                    maxLines = 3,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }

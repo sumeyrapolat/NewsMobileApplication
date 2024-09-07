@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.newsmobileapplication.ui.theme.Redwood
 
 @Composable
@@ -37,17 +38,10 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
 
     ScrollableTabRow(
         selectedTabIndex = selectedCategoryIndex,
-        edgePadding = 16.dp,
+        edgePadding = 14.dp,
         backgroundColor = Color.White,
         contentColor = Color.Black,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier
-                    .tabIndicatorOffset(tabPositions[selectedCategoryIndex])
-                    .height(4.dp), // Indicator height
-                color = Color.Black
-            )
-        }
+        indicator = { Box {} } // Boş Box ile indicator'ı kaldırıyoruz
     ) {
         categories.forEachIndexed { index, category ->
             Tab(
@@ -57,15 +51,16 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                     onCategorySelected(category) // Seçilen kategoriyi çağırıyoruz
                 },
                 modifier = Modifier
-                    .padding(vertical = 4.dp, horizontal = 6.dp)
+                    .padding(vertical = 4.dp, horizontal = 4.dp)
                     .clip(RoundedCornerShape(16.dp)) // Kenarları yuvarlak
                     .background(
-                        if (selectedCategoryIndex == index) Redwood else Color.Transparent
+                        if (selectedCategoryIndex == index) Color.Black else Color.Transparent
                     ), // Seçili olan kutucuğun arka planını belirliyoruz
                 text = {
                     Text(
                         text = category,
                         fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
                         color = if (selectedCategoryIndex == index) Color.White else Color.Gray, // Seçili olanın rengi beyaz
                         modifier = Modifier.padding(vertical = 8.dp, horizontal = 14.dp)
                     )
