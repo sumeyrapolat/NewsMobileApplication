@@ -32,7 +32,7 @@ class FeedViewModel @Inject constructor(
     val errorMessage: StateFlow<String?> = _errorMessage
 
     init {
-        fetchTopStories("technology")  // Varsayılan olarak teknoloji haberleri çekiyoruz
+        fetchTopStories("home")  // Varsayılan olarak teknoloji haberleri çekiyoruz
         loadFavorites()  // Favori haberleri başlatma sırasında yükleyelim
     }
 
