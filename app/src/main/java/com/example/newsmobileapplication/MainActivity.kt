@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -77,10 +78,10 @@ fun MainScreen(navController: NavHostController) {
         topBar = {
             if (currentDestination == "feed" || currentDestination == "favorites" || currentDestination == "category") {
                 TopAppBar(
-                    title = { Text("NewsRubu+", fontWeight = FontWeight.SemiBold) },
+                    title = { Text("NewsRubu+",fontWeight = FontWeight.SemiBold) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Martinique, // Background color
-                        titleContentColor = Color.White // Title text color
+                        containerColor = Color.White, // Background color
+                        titleContentColor = Color.Black // Title text color
                     )
                 )
             }

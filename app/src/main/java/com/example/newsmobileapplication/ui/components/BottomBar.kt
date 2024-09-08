@@ -30,7 +30,7 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Martinique,
+                color = Color.White,
                 shape = RoundedCornerShape(20)
             )
     ) {

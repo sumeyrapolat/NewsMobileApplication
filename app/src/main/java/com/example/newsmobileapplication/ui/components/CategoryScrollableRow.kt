@@ -39,10 +39,11 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
 
     ScrollableTabRow(
         selectedTabIndex = selectedCategoryIndex,
-        edgePadding = 14.dp,
+        edgePadding = 12.dp,
         backgroundColor = Color.White,
         contentColor = KhasmirBlue,
-        indicator = { Box {} } // Boş Box ile indicator'ı kaldırıyoruz
+        indicator = { Box {} }, // Boş Box ile indicator'ı kaldırıyoruz
+        divider = { Box {} }    // Divider'ı kaldırıyoruz
     ) {
         categories.forEachIndexed { index, category ->
             Tab(
@@ -53,7 +54,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                 },
                 modifier = Modifier
                     .padding(vertical = 4.dp, horizontal = 4.dp)
-                    .clip(RoundedCornerShape(16.dp)) // Kenarları yuvarlak
+                    .clip(RoundedCornerShape(22.dp)) // Kenarları yuvarlak
                     .background(
                         if (selectedCategoryIndex == index) KhasmirBlue else Color.Transparent
                     ), // Seçili olan kutucuğun arka planını belirliyoruz
@@ -63,10 +64,11 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = if (selectedCategoryIndex == index) Color.White else Color.Gray, // Seçili olanın rengi beyaz
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 14.dp)
+                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
                     )
                 }
             )
         }
     }
+
 }

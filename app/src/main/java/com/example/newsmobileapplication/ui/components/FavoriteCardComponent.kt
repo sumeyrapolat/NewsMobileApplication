@@ -21,124 +21,149 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Bookmarks
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberImagePainter
-import com.example.newsmobileapplication.ui.theme.KhasmirBlue
 import com.example.newsmobileapplication.ui.theme.Platinum
 import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.utils.formatDateTime
 
 @Composable
 fun FavoriteCardComponent(
     newsTitle: String,
     newsContent: String,
     newsSection: String,
+    newsDate: String,
+    newsAuthor: String,
     imageUrl: String?,
     onClick: () -> Unit,
-    onRemoveClick: () -> Unit // Favorilerden çıkarmak için callback
+    onRemoveClick: () -> Unit // Callback for removing from favorites
 ) {
     Card(
         modifier = Modifier
-            .padding(6.dp)
+            .padding(8.dp) // Card dışındaki padding
             .fillMaxWidth()
             .clickable { onClick() }
-            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Card için ince gri border
+            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Border ekleniyor
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically // Görsel ve metinler dikeyde ortalanacak
+                .padding(12.dp) // Card içerisindeki bileşenler için padding
         ) {
-            // Sol taraftaki Column: Görsel ve Kategori
-            Column(
-                modifier = Modifier.weight(2f) // Sol tarafın genişliğini ayarlıyoruz
+            // Image section with title and section over it
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp) // Görsel yüksekliği
+                    .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                    .background(Color.Transparent)
             ) {
-                // Görsel eklendi
                 if (imageUrl != null) {
                     Image(
-                        painter = rememberImagePainter(data = imageUrl),
+                        painter = rememberImagePainter(imageUrl),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(100.dp) // Görselin genişlik ve yüksekliği sabit
-                            .clip(RoundedCornerShape(10.dp)) // Görselin kenarları yuvarlanıyor
-                            .padding(end = 8.dp), // Görsel ile içerik arasında boşluk
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Kategori kutucuğu
-                Box(
-                    modifier = Modifier
-                        .background(
-                            Redwood,
-                            shape = RoundedCornerShape(12.dp)
-                        ) // Kırmızı arka plan ve yuvarlak köşeler
-                        .padding(horizontal = 12.dp, vertical = 3.dp) // İç kenar boşluğu
-                ) {
-                    Text(
-                        text = newsSection,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Sağ taraftaki Column: Başlık, Favori butonu ve içerik
-            Column(
-                modifier = Modifier.weight(5f) // Sağ tarafın genişliğini ayarlıyoruz
-            ) {
-                // Başlık ve favori ikonu
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Haber başlığı
-                    Text(
-                        text = newsTitle,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
+                            .fillMaxSize() // Tüm alanı kaplaması için
+                            .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
+                        contentScale = ContentScale.Crop // Görselin kesilmesini önlemek için
                     )
 
-                    // Favori butonu
-                    IconButton(onClick = onRemoveClick) {
-                        Icon(
-                            imageVector = Icons.Default.Bookmark ,
-                            contentDescription = "Remove from favorites",
-                            tint = Color.Red
+                    // Overlay for section and title
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.4f))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        // Section
+                        Text(
+                            text = newsSection.uppercase(),
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .background(Redwood, shape = RoundedCornerShape(4.dp))
+                                .padding(horizontal = 4.dp, vertical = 2.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        // Title
+                        Text(
+                            text = newsTitle,
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Haber özeti (abstract)
-                Text(
-                    text = newsContent,
-                    fontSize = 16.sp,
-                    color = Color.Gray,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Bottom section with date, author, and icon
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 8.dp), // Row ile üstteki bileşen arasında padding
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // Date
+                    Text(
+                        text = formatDateTime(newsDate),
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Author
+                    Text(
+                        text = newsAuthor,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                // Favorite icon button
+                IconButton(
+                    onClick = onRemoveClick,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(Color.LightGray.copy(0.5f), shape = RoundedCornerShape(50))
+                        .size(32.dp) // Circle background size
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Bookmark,
+                        contentDescription = "Remove from favorites",
+                        tint = Redwood,
+                        modifier = Modifier.size(18.dp) // Icon size suggestion
+                    )
+                }
+            }
+
+            // News Content
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = newsContent, // No need for a null check since it's a non-nullable String
+                fontSize = 16.sp,
+                color = Color.Black,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
