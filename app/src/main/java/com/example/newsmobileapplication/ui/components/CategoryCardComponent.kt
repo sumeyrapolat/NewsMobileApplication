@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,8 +31,9 @@ import com.example.newsmobileapplication.ui.theme.Platinum
 @Composable
 fun CategoryCardComponent(
     newsTitle: String,
-    newsContent: String,
-    imageUrl: String?, // Görsel URL'sini alıyoruz
+    newsDate: String,
+    newsAuthor: String,
+    imageUrl: String?,
     onClick: () -> Unit
 ) {
     Card(
@@ -47,7 +49,7 @@ fun CategoryCardComponent(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically // Row'un içeriği dikeyde ortalanır
         ) {
@@ -58,17 +60,27 @@ fun CategoryCardComponent(
                     contentDescription = null,
                     modifier = Modifier
                         .weight(2f) // Görsel 2 birim yer kaplayacak
-                        .size(100.dp) // Görselin genişlik ve yüksekliği sabit
+                        .size(140.dp) // Görselin genişlik ve yüksekliği sabit
                         .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
                         .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
                     contentScale = ContentScale.Crop
                 )
             }
 
+            Spacer(modifier = Modifier.width(4.dp))
+
             // Başlık ve içerik için column
             Column(
                 modifier = Modifier.weight(5f) // Başlık ve içerik 5 birim yer kaplayacak
             ) {
+                // Haber özeti (abstract)
+                Text(
+                    text = newsAuthor,
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+
                 // Haber başlığı
                 Text(
                     text = newsTitle,
@@ -79,15 +91,12 @@ fun CategoryCardComponent(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Haber özeti (abstract)
+                Spacer(modifier = Modifier.height(6.dp))
+                                // Haber özeti (abstract)
                 Text(
-                    text = newsContent,
-                    fontSize = 16.sp,
+                    text = newsDate,
+                    fontSize = 14.sp,
                     color = Color.Gray,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

@@ -24,8 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.model.entities.NewsItem
+import com.example.newsmobileapplication.ui.theme.KhasmirBlue
 import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.utils.formatDateTime
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 @Composable
@@ -95,7 +99,8 @@ fun TopNewsScrollableRow(
 fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .size(300.dp) // Card boyutu ayarlanıyor
+            .height(300.dp) // Card boyutu ayarlanıyor
+            .width(400.dp)
             .padding(8.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp) // Köşeleri yuvarlatılmış card
@@ -131,6 +136,18 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
                         .background(Redwood, shape = RoundedCornerShape(4.dp))
                         .padding(horizontal = 4.dp, vertical = 2.dp)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                //date
+                Text(
+                    text = formatDateTime(newsItem.publishedDate),
+                    fontSize = 14.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .background(Redwood.copy(0.9f), shape = RoundedCornerShape(4.dp))
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -147,3 +164,4 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
         }
     }
 }
+

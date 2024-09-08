@@ -24,14 +24,15 @@ import com.example.newsmobileapplication.ui.theme.Platinum
 @Composable
 fun NewsCardComponent(
     newsTitle: String,
-    newsSection: String,  // Section eklendi
-    newsAuthor: String?,  // Yazar bilgisi eklendi
+    newsSection: String,
+    newsAuthor: String?,
+    newsDate: String,
     imageUrl: String?,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(12.dp)
             .fillMaxWidth()
             .clickable { onClick() }
             .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Card için ince gri border
@@ -52,9 +53,9 @@ fun NewsCardComponent(
                     painter = rememberImagePainter(data = imageUrl),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(100.dp) // Görselin genişlik ve yüksekliği sabit
-                        .clip(RoundedCornerShape(10.dp)) // Görselin kenarları yuvarlanıyor
-                        .padding(end = 8.dp), // Görsel ile içerik arasında boşluk
+                        .size(120.dp) // Görselin genişlik ve yüksekliği sabit
+                        .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
+                    .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
                     contentScale = ContentScale.Crop
                 )
             }
@@ -66,14 +67,17 @@ fun NewsCardComponent(
                 modifier = Modifier
                     .fillMaxWidth() // Column'un tüm genişliği kaplaması için
             ) {
-                // Section (Kategori)
-                Text(
-                    text = newsSection,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.LightGray, // Kategoriyi farklı bir renkle ayırabiliriz
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
+                // Yazar bilgisi (Opsiyonel)
+                if (!newsAuthor.isNullOrEmpty()) {
+                    Text(
+                        text = "$newsAuthor",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Gray
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(3.dp))
 
                 // Başlık
                 Text(
@@ -86,13 +90,29 @@ fun NewsCardComponent(
                     modifier = Modifier.padding(bottom = 4.dp) // Alt boşluk
                 )
 
-                // Yazar bilgisi (Opsiyonel)
-                if (!newsAuthor.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp), // Alt boşluk
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Section (Kategori)
                     Text(
-                        text = "$newsAuthor",
+                        text = newsSection,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Gray
+                        fontWeight = FontWeight.Bold,
+                        color = Color.LightGray, // Kategoriyi farklı bir renkle ayırabiliriz
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = newsDate,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.LightGray, // Kategoriyi farklı bir renkle ayırabiliriz
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
             }

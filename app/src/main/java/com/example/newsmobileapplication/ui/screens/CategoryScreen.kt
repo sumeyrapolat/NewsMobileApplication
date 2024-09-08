@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import com.example.newsmobileapplication.ui.components.CategoryCardComponent
 import com.example.newsmobileapplication.ui.components.CategoryScrollableRow
 import com.example.newsmobileapplication.ui.components.SearchBar
+import com.example.newsmobileapplication.utils.formatDateTime
 import com.example.newsmobileapplication.viewmodel.CategoryViewModel
 
 @Composable
@@ -115,7 +116,8 @@ fun CategoryScreen(
                 items(newsItems ?: emptyList()) { newsItem ->
                     CategoryCardComponent(
                         newsTitle = newsItem.title,
-                        newsContent = newsItem.abstract ?: "",
+                        newsAuthor = "• " + newsItem.byline,
+                        newsDate = formatDateTime(newsItem.publishedDate),
                         imageUrl = newsItem.multimedia?.firstOrNull()?.url,
                         onClick = {
                             navController.navigate("newsDetail/${newsItem.id}")

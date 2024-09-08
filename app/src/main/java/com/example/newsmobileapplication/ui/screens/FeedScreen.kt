@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +20,7 @@ import androidx.navigation.NavController
 import com.example.newsmobileapplication.ui.components.NewsCardComponent
 import com.example.newsmobileapplication.ui.components.TopNewsScrollableRow
 import com.example.newsmobileapplication.ui.theme.Platinum
+import com.example.newsmobileapplication.utils.formatDateTime
 import com.example.newsmobileapplication.utils.generateNewsItemId
 import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
@@ -51,14 +53,8 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
             Text(
                 text = "Breaking News",
                 fontSize = 24.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(8.dp)
-            )
-
-            // Divider under Breaking News
-            Divider(
-                color = Platinum,
-                thickness = 1.dp,
             )
 
             if (newsItems != null && newsItems!!.isNotEmpty()) {
@@ -79,14 +75,8 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                 Text(
                     text = "Recommendation",
                     fontSize = 24.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(8.dp)
-                )
-
-                // Divider under Recommendation
-                Divider(
-                    color = Platinum,
-                    thickness = 1.dp,
                 )
 
                 LazyColumn {
@@ -98,7 +88,8 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                             newsTitle = newsItem.title,
                             imageUrl = newsImageUrl,
                             newsSection = newsItem.section,
-                            newsAuthor = newsItem.byline,
+                            newsDate = formatDateTime(newsItem.publishedDate),
+                            newsAuthor = "• " + newsItem.byline,
                             onClick = {
                                 navController.navigate("newsDetail/$newsItemId")
                             }
@@ -117,3 +108,5 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
         }
     }
 }
+
+

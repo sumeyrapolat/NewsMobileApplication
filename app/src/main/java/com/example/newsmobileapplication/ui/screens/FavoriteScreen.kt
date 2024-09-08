@@ -28,11 +28,11 @@ fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hilt
         // Ekranın üstüne başlık ekliyoruz
         Text(
             text = "Saved Articles",
-            fontSize = 28.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,  // Siyah renk
             modifier = Modifier
-                .padding(start =6.dp, bottom = 12.dp) // Başlık ve liste arasına boşluk ekliyoruz
+                .padding(8.dp) // Başlık ve liste arasına boşluk ekliyoruz
         )
 
         // Favori haberlerin listesi
@@ -45,6 +45,8 @@ fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hilt
                     newsTitle = newsItem.title,
                     newsContent = newsItem.abstract ?: "No content available",  // abstract alanı kullanılıyor
                     newsSection = newsItem.section,
+                    newsDate = newsItem.publishedDate,
+                    newsAuthor = "• " + newsItem.byline,
                     imageUrl = imageUrl,
                     onClick = {
                         // Habere tıklayınca detay sayfasına gitme işlemi
