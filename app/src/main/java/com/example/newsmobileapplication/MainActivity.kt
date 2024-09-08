@@ -78,7 +78,7 @@ fun MainScreen(navController: NavHostController) {
         topBar = {
             if (currentDestination == "feed" || currentDestination == "favorites" || currentDestination == "category") {
                 TopAppBar(
-                    title = { Text("NewsRubu+",fontWeight = FontWeight.SemiBold) },
+                    title = { Text("") },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.White, // Background color
                         titleContentColor = Color.Black // Title text color

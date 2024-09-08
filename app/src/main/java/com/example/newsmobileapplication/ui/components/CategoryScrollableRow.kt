@@ -62,7 +62,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                     Text(
                         text = category,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         color = if (selectedCategoryIndex == index) Color.White else Color.Gray, // Seçili olanın rengi beyaz
                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
                     )

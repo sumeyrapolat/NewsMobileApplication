@@ -34,9 +34,9 @@ fun SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(start=12.dp, end=12.dp, top=8.dp, bottom=8.dp),
-        placeholder = { Text(text = placeholder, fontSize = 14.sp) },
+        placeholder = { Text(text = placeholder, fontSize = 16.sp) },
         singleLine = true,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.LightGray.copy(alpha = 0.2f),
             focusedIndicatorColor = Color.Transparent,
