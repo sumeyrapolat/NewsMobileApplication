@@ -48,7 +48,10 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
         }
     } else {
         // Show the feed content
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(start= 12.dp, end = 12.dp, bottom = 12.dp) // Genel padding
+        ) {
             // Breaking News (Top 5 News in a Scrollable Row)
             Text(
                 text = "Breaking News",

@@ -60,7 +60,7 @@ fun CategoryCardComponent(
                     contentDescription = null,
                     modifier = Modifier
                         .weight(2f) // Görsel 2 birim yer kaplayacak
-                        .size(140.dp) // Görselin genişlik ve yüksekliği sabit
+                        .size(120.dp) // Görselin genişlik ve yüksekliği sabit
                         .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
                         .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
                     contentScale = ContentScale.Crop

@@ -35,70 +35,72 @@ import androidx.navigation.NavController
 import com.example.newsmobileapplication.ui.components.CategoryCardComponent
 import com.example.newsmobileapplication.ui.components.CategoryScrollableRow
 import com.example.newsmobileapplication.ui.components.SearchBar
+import com.example.newsmobileapplication.ui.theme.Platinum
 import com.example.newsmobileapplication.utils.formatDateTime
 import com.example.newsmobileapplication.viewmodel.CategoryViewModel
 
 @Composable
 fun CategoryScreen(
     navController: NavController,
-    viewModel: CategoryViewModel = hiltViewModel(),  // CategoryViewModel kullanılıyor
+    viewModel: CategoryViewModel = hiltViewModel(),
     onCategorySelected: (String) -> Unit = {}
 ) {
     var query by remember { mutableStateOf("") }
 
-    // Haberler ve yükleme durumu state'lerini alıyoruz
     val newsItems by viewModel.newsItems.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    // Ekran yüklendiğinde ilk olarak "Arts" kategorisi için API çağrısı yapılıyor
+    // Varsayılan olarak "World" kategorisini seçiyoruz
     LaunchedEffect(Unit) {
         viewModel.fetchNewsByCategory("World")
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        // Discover Başlık
+        Text(
+            text = "Discover",
+            fontSize = 40.sp, // Büyük font
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp) // Başlığın altında boşluk
+        )
 
-        // Geri tuşu ve başlık
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                text = "Explore Categories",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-        }
+        Spacer(modifier = Modifier.height(6.dp)) // Başlık ve alt başlık arası boşluk
 
-        Spacer(modifier = Modifier.height(4.dp))
+        // Discover Alt Başlık
+        Text(
+            text = "News from all around the world",
+            fontSize = 14.sp, // Alt başlık daha küçük
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Gray, // Gri renkte alt başlık
+            modifier = Modifier.padding(horizontal = 16.dp) // Alt başlığın altında boşluk
+        )
 
-        // Arama çubuğu
+        Spacer(modifier = Modifier.height(6.dp)) // Kategorilerle arama çubuğu arasında boşluk
+
+        // Search Bar
         SearchBar(
             query = query,
             onQueryChange = { query = it },
             onSearch = {
-                // Arama yapıldığında, CategoryViewModel'den API çağrısı yapıyoruz
                 viewModel.fetchNewsByCategory(query)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp), // Arama çubuğu için dikeyde boşluk
             placeholder = "Search for news..."
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Kategorilerle arama çubuğu arasında boşluk
 
         // Kategori sekmesi
         CategoryScrollableRow { selectedCategory ->
-            // Kategori seçildiğinde, CategoryViewModel'den API çağrısı yapıyoruz
             viewModel.fetchNewsByCategory(selectedCategory)
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Kategorilerle içerik arasında boşluk
 
         // Yükleniyorsa loading göstergesi
         if (isLoading) {
@@ -110,8 +112,8 @@ fun CategoryScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                    .padding(horizontal = 8.dp), // Kartların kenar boşlukları
+                verticalArrangement = Arrangement.spacedBy(10.dp) // Kartlar arasındaki boşluk
             ) {
                 items(newsItems ?: emptyList()) { newsItem ->
                     CategoryCardComponent(

@@ -121,7 +121,7 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f)) // Görsel üzerinde yarı saydam arka plan
+                    .background(Color.Black.copy(alpha = 0.2f)) // Görsel üzerinde yarı saydam arka plan
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Bottom, // En alta yerleştiriyoruz
                 horizontalAlignment = Alignment.Start

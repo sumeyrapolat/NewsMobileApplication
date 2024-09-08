@@ -23,7 +23,7 @@ fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hilt
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp) // Genel padding
+            .padding(start= 12.dp, end = 12.dp, bottom = 12.dp) // Genel padding
     ) {
         // Ekranın üstüne başlık ekliyoruz
         Text(
