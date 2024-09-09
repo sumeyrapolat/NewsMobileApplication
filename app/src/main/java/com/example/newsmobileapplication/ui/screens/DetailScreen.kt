@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,10 +39,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.model.entities.NewsItem
 import com.example.newsmobileapplication.utils.ApiResult
 import com.example.newsmobileapplication.viewmodel.FeedViewModel
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import com.example.newsmobileapplication.ui.theme.SoftBlue
 
 @Composable
 fun NewsDetailScreen(
@@ -108,7 +111,6 @@ fun NewsDetailScreen(
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
                     }
 
-                    // Favori butonu
                     IconButton(
                         onClick = {
                             viewModel.toggleFavorite(newsItemId)
@@ -136,7 +138,7 @@ fun NewsDetailScreen(
 
                         Box(
                             modifier = Modifier
-                                .background(Color(0xFF607D8B), shape = RoundedCornerShape(12.dp))
+                                .background(SoftBlue, shape = RoundedCornerShape(12.dp))
                                 .padding(horizontal = 15.dp, vertical = 6.dp)
                         ) {
                             Text(
@@ -179,11 +181,19 @@ fun NewsDetailScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    Text(
-                                        text = "Read more: ${newsItem.url}",
-                                        fontSize = 14.sp,
-                                        color = Color.Blue
-                                    )
+                                    // Read More Button
+                                    Button(
+                                        onClick = {
+                                            // Open the URL in the default browser
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.url))
+                                            navController.context.startActivity(intent)
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = SoftBlue),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(text = "Read more", color = Color.White)
+                                    }
                                 }
                             }
                         }
