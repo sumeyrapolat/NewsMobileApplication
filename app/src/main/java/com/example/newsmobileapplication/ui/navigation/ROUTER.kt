@@ -12,7 +12,6 @@ import com.example.newsmobileapplication.ui.screens.FavoriteScreen
 import com.example.newsmobileapplication.ui.screens.FeedScreen
 import com.example.newsmobileapplication.ui.screens.LoginScreen
 import com.example.newsmobileapplication.ui.screens.NewsDetailScreen
-import com.example.newsmobileapplication.ui.screens.SearchNewsDetailScreen
 import com.example.newsmobileapplication.ui.screens.SignUpScreen
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
 import com.example.newsmobileapplication.viewmodel.SignUpViewModel
@@ -40,19 +39,6 @@ fun Router(navController: NavHostController){
         composable("favorites") {
             FavoriteScreen(navController)
         }
-
-        composable(
-            "articleNewsDetail/{articleId}",
-            arguments = listOf(
-                navArgument("articleId") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            val articleId = backStackEntry.arguments?.getString("articleId")
-            SearchNewsDetailScreen(navController = navController, articleId = articleId ?: "")
-        }
-
 
         composable(
             "newsDetail/{newsItemId}",

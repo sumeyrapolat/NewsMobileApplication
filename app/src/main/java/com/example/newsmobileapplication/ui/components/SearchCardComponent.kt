@@ -1,19 +1,27 @@
 package com.example.newsmobileapplication.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,69 +35,112 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.ui.theme.Platinum
+import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.utils.formatDateTime
 
 @Composable
 fun SearchCardComponent(
     newsTitle: String,
     newsAuthor: String,
-    imageUrl: String?,
-    onClick: () -> Unit
+    newsDate: String,
+    newsAbstract: String,
+    newsSection: String,
+    imageUrl: String?
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(8.dp) // Card dışındaki padding
             .fillMaxWidth()
-            .clickable { onClick() }
-            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Card için ince gri border
+            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Border ekleniyor
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically // Row'un içeriği dikeyde ortalanır
+                .padding(12.dp) // Card içerisindeki bileşenler için padding
         ) {
-            // Görsel eklendi
-            if (imageUrl != null) {
-                Image(
-                    painter = rememberImagePainter(data = imageUrl),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .weight(2f) // Görsel 2 birim yer kaplayacak
-                        .size(120.dp) // Görselin genişlik ve yüksekliği sabit
-                        .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
-                        .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
-                    contentScale = ContentScale.Crop
-                )
+            // Image section with title and section over it
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp) // Görsel yüksekliği
+                    .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                    .background(Color.Transparent)
+            ) {
+                if (imageUrl != null) {
+                    Image(
+                        painter = rememberImagePainter(imageUrl),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize() // Tüm alanı kaplaması için
+                            .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
+                        contentScale = ContentScale.Crop // Görselin kesilmesini önlemek için
+                    )
+
+                    // Overlay for section and title
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.4f))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        // Section
+                        Text(
+                            text = newsSection.uppercase(),
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .background(Redwood, shape = RoundedCornerShape(4.dp))
+                                .padding(horizontal = 4.dp, vertical = 2.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        // Title
+                        Text(
+                            text = newsTitle,
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Başlık ve içerik için column
-            Column(
-                modifier = Modifier.weight(5f) // Başlık ve içerik 5 birim yer kaplayacak
+            // Bottom section with date, author, and icon
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 8.dp), // Row ile üstteki bileşen arasında padding
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Haber özeti (abstract)
                 Text(
                     text = newsAuthor,
                     fontSize = 14.sp,
-                    color = Color.Gray,
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Haber başlığı
-                Text(
-                    text = newsTitle,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    color = Color.Gray
                 )
             }
+
+            // News Content
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = newsAbstract, // No need for a null check since it's a non-nullable String
+                fontSize = 16.sp,
+                color = Color.Black,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }

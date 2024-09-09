@@ -1,5 +1,6 @@
 package com.example.newsmobileapplication.model.entities
 
+import com.example.newsmobileapplication.utils.generateNewsItemId
 import com.google.gson.annotations.SerializedName
 
 data class NewsItem(
@@ -10,7 +11,7 @@ data class NewsItem(
     @SerializedName("url") val url: String,
     @SerializedName("multimedia") val multimedia: List<Multimedia>?,
     @SerializedName("section") val section: String,
-    @SerializedName("id") val id: String
+    val id: String = generateNewsItemId(url)
 )
 
 data class NewsResponse(

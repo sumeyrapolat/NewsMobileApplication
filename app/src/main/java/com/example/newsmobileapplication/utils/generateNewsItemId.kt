@@ -1,10 +1,10 @@
 package com.example.newsmobileapplication.utils
 
 import android.util.Log
+import java.util.UUID
 
 fun generateNewsItemId(newsUrl: String): String {
-    val id = newsUrl.hashCode().toString()
-    Log.d("generateNewsItemId", "Generated ID for URL $newsUrl: $id")
+    val id = UUID.nameUUIDFromBytes(newsUrl.toByteArray()).toString()
+    Log.d("generateNewsItemId", "Generated UUID for URL $newsUrl: $id")
     return id
 }
-

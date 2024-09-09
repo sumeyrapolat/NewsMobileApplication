@@ -1,6 +1,7 @@
 package com.example.newsmobileapplication.ui.screens
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,77 +37,79 @@ import com.example.newsmobileapplication.ui.components.SearchBar
 import com.example.newsmobileapplication.ui.components.SearchCardComponent
 import com.example.newsmobileapplication.utils.ApiResult
 import com.example.newsmobileapplication.utils.formatDateTime
+import com.example.newsmobileapplication.utils.generateNewsItemId
 import com.example.newsmobileapplication.viewmodel.CategoryViewModel
+import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
 @Composable
 fun CategoryScreen(
     navController: NavController,
-    viewModel: CategoryViewModel = hiltViewModel(),
+    feedViewModel: FeedViewModel = hiltViewModel(),
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
     onCategorySelected: (String) -> Unit = {}
 ) {
     var query by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
 
-    val newsItems by viewModel.newsItems.collectAsState()
-    val searchResults by viewModel.searchResults.collectAsState()
+    val newsItems by feedViewModel.newsItems.collectAsState()
+    val searchResults by categoryViewModel.searchResults.collectAsState()
 
     // Varsayılan olarak kategoriye ait haberleri getiriyoruz
     LaunchedEffect(Unit) {
-        viewModel.fetchNewsByCategory("World")
+        feedViewModel.fetchNewsByCategory("World")
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         // Discover Başlık
         Text(
             text = "Discover",
-            fontSize = 40.sp, // Büyük font
+            fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp) // Başlığın altında boşluk
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(6.dp)) // Başlık ve alt başlık arası boşluk
+        Spacer(modifier = Modifier.height(6.dp))
 
         // Discover Alt Başlık
         Text(
             text = "News from all around the world",
-            fontSize = 14.sp, // Alt başlık daha küçük
+            fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Gray, // Gri renkte alt başlık
-            modifier = Modifier.padding(horizontal = 16.dp) // Alt başlığın altında boşluk
+            color = Color.Gray,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(6.dp)) // Arama çubuğu ve başlık arası boşluk
+        Spacer(modifier = Modifier.height(6.dp))
 
         // Search Bar
         SearchBar(
             query = query,
             onQueryChange = {
                 query = it
-                isSearchActive = query.isNotEmpty() // Eğer query boş değilse, arama aktif
+                isSearchActive = query.isNotEmpty()
             },
             onSearch = {
                 if (query.isNotEmpty()) {
-                    viewModel.fetchArticlesByQuery(query) // Arama sonuçlarını çekiyoruz
+                    categoryViewModel.fetchArticlesByQuery(query)
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp), // Arama çubuğu için dikeyde boşluk
+                .padding(vertical = 8.dp),
             placeholder = "Search for news..."
         )
 
-        Spacer(modifier = Modifier.height(8.dp)) // Kategorilerle arama çubuğu arasında boşluk
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Kategori sekmesi (arama aktif değilken görünür)
         if (!isSearchActive) {
+            // Kategori sekmesi
             CategoryScrollableRow { selectedCategory ->
-                viewModel.fetchNewsByCategory(selectedCategory)
+                feedViewModel.fetchNewsByCategory(selectedCategory)
             }
 
-            Spacer(modifier = Modifier.height(8.dp)) // Kategorilerle içerik arasında boşluk
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
         // Eğer arama aktifse, arama sonuçlarını göster
@@ -135,9 +138,9 @@ fun CategoryScreen(
                                 newsTitle = result.headline.main,
                                 newsAuthor = "• " + (result.byline.original ?: "Unknown author"),
                                 imageUrl = imageUrl,
-                                onClick = {
-                                    navController.navigate("articleNewsDetail/${result.id}")
-                                }
+                                newsDate = formatDateTime(result.pubDate),
+                                newsAbstract = result.abstract ?: "No abstract available",
+                                newsSection = result.sectionName,
                             )
                         }
                     }
@@ -159,7 +162,6 @@ fun CategoryScreen(
                 }
 
                 is ApiResult.Success -> {
-                    // Kategori haberlerini yayın tarihine göre sıralıyoruz
                     val newsList = (newsItems as ApiResult.Success<List<NewsItem>>).data.sortedByDescending { it.publishedDate }
 
                     LazyColumn(
@@ -169,17 +171,22 @@ fun CategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(newsList) { newsItem ->
-                            val imageUrl = newsItem.multimedia?.firstOrNull()?.url
-
-                            CategoryCardComponent(
-                                newsTitle = newsItem.title,
-                                newsAuthor = "• " + newsItem.byline,
-                                newsDate = formatDateTime(newsItem.publishedDate),
-                                imageUrl = imageUrl,
-                                onClick = {
-                                    navController.navigate("newsDetail/${newsItem.id}")
-                                }
-                            )
+                            val newsItemId = newsItem.url?.let { generateNewsItemId(it) }
+                            if (newsItemId != null) {
+                                Log.d("CategoryScreen", "Generated ID in CategoryScreen: $newsItemId")
+                                CategoryCardComponent(
+                                    newsTitle = newsItem.title,
+                                    newsAuthor = "• " + newsItem.byline,
+                                    newsDate = formatDateTime(newsItem.publishedDate),
+                                    imageUrl = newsItem.multimedia?.firstOrNull()?.url,
+                                    onClick = {
+                                        Log.d("CategoryScreen", "Clicked news ID: $newsItemId")
+                                        navController.navigate("newsDetail/$newsItemId")
+                                    }
+                                )
+                            } else {
+                                Log.e("CategoryScreen", "News URL is null, cannot generate ID")
+                            }
                         }
                     }
                 }
