@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.newsmobileapplication.ui.theme.*
-import com.example.newsmobileapplication.viewmodel.SignUpState
+import com.example.newsmobileapplication.utils.SignUpState
 import com.example.newsmobileapplication.viewmodel.SignUpViewModel
 
 @Composable
@@ -297,7 +297,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
         is SignUpState.Success -> {
             Toast.makeText(context, (signUpState.value as SignUpState.Success).message, Toast.LENGTH_LONG).show()
             Log.d("SignUpScreen", "Navigating to signin")
-            navController.navigate("login") {
+            navController.navigate("feed") {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
                 }

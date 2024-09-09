@@ -32,8 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.newsmobileapplication.data.preferences.PreferencesManager
 import com.example.newsmobileapplication.ui.theme.*
+import com.example.newsmobileapplication.utils.LoginState
 import com.example.newsmobileapplication.viewmodel.AuthViewModel
-import com.example.newsmobileapplication.viewmodel.LoginState
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
 
 @Composable

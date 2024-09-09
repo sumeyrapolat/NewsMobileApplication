@@ -23,21 +23,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.newsmobileapplication.model.repository.AuthRepository
 import com.example.newsmobileapplication.ui.components.BottomBar
 import com.example.newsmobileapplication.ui.components.BottomNavItem
 import com.example.newsmobileapplication.ui.navigation.Router
 import com.example.newsmobileapplication.ui.theme.NewsMobileApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var authRepository: AuthRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NewsMobileApplicationTheme {
                 val navController = rememberNavController()
-                MainScreen(navController = navController)
+                MainScreen(navController = navController, authRepository = authRepository)
             }
         }
     }
@@ -45,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, authRepository: AuthRepository) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
 
@@ -96,7 +103,7 @@ fun MainScreen(navController: NavHostController) {
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                Router(navController = navController)
+                Router(navController = navController, authRepository = authRepository)
             }
         }
     )

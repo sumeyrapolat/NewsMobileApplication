@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.newsmobileapplication.model.repository.AuthRepository
 import com.example.newsmobileapplication.ui.screens.CategoryScreen
 import com.example.newsmobileapplication.ui.screens.FavoriteScreen
 import com.example.newsmobileapplication.ui.screens.FeedScreen
@@ -15,14 +16,16 @@ import com.example.newsmobileapplication.ui.screens.NewsDetailScreen
 import com.example.newsmobileapplication.ui.screens.SignUpScreen
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
 import com.example.newsmobileapplication.viewmodel.SignUpViewModel
-import android.net.Uri
-
 
 @Composable
-fun Router(navController: NavHostController){
+fun Router(navController: NavHostController, authRepository: AuthRepository) {
+    val startDestination = if (authRepository.checkUserLoggedIn()) {
+        "feed"
+    } else {
+        "login"
+    }
 
-    NavHost(navController = navController, startDestination = "feed") {
-
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("signup") {
             val signUpViewModel = hiltViewModel<SignUpViewModel>()
             SignUpScreen(navController, signUpViewModel)
@@ -53,6 +56,5 @@ fun Router(navController: NavHostController){
         composable("category") {
             CategoryScreen(navController)
         }
-
     }
 }
