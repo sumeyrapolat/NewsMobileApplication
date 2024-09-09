@@ -108,4 +108,15 @@ class AuthRepository @Inject constructor(
     fun getProfilePhotoUrl(): String? {
         return cachedUserData?.profilePhotoUrl
     }
+
+    // AuthRepository'de mevcut kullanıcı verisini alma fonksiyonu
+    suspend fun loadCurrentUserData(): Result<User> {
+        val userId = getCurrentUserID()
+        return if (userId != null) {
+            loadUserData(userId)
+        } else {
+            Result.failure(Exception("No user logged in"))
+        }
+    }
+
 }
