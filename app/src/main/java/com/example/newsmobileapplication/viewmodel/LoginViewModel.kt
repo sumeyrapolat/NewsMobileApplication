@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsmobileapplication.model.repository.AuthRepository
+import com.example.newsmobileapplication.utils.LoginState
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,11 +43,4 @@ class LoginViewModel @Inject constructor(
     fun resetSignInState() {
         _loginState.value = LoginState.Idle
     }
-}
-
-sealed class LoginState {
-    object Idle : LoginState()
-    object Loading : LoginState()
-    data class Success(val message: String) : LoginState()
-    data class Error(val error: String) : LoginState()
 }

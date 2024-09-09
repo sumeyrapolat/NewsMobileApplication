@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsmobileapplication.model.entities.User
+import com.example.newsmobileapplication.utils.SignUpState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,10 +68,3 @@ class SignUpViewModel @Inject constructor(
     }
 }
 
-// Kayıt durumu için durum sınıfları
-sealed class SignUpState {
-    object Idle : SignUpState()
-    object Loading : SignUpState()
-    data class Success(val message: String) : SignUpState()
-    data class Error(val error: String) : SignUpState()
-}
