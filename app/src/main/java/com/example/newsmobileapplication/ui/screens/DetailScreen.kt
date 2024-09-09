@@ -54,11 +54,14 @@ fun NewsDetailScreen(
     Log.d("NewsDetailScreen", "News Item ID passed: $newsItemId")
 
     val newsItemsState by viewModel.newsItems.collectAsState()
+    val isFavorite = remember { mutableStateOf(viewModel.isFavorite(newsItemId)) }
 
     LaunchedEffect(newsItemsState) {
         if (newsItemsState is ApiResult.Success) {
             Log.d("NewsDetailScreen", "News items successfully loaded, fetching news detail for ID: $newsItemId")
             viewModel.fetchNewsItemById(newsItemId)
+        } else {
+            Log.d("NewsDetailScreen", "News items not loaded yet or error occurred")
         }
     }
 
@@ -66,7 +69,6 @@ fun NewsDetailScreen(
 
     when (newsDetailState) {
         is ApiResult.Loading -> {
-            Log.d("NewsDetailScreen", "Loading news details...")
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -79,7 +81,6 @@ fun NewsDetailScreen(
 
         is ApiResult.Success -> {
             val newsItem = (newsDetailState as ApiResult.Success<NewsItem>).data
-            Log.d("NewsDetailScreen", "Fetched News Item: ${newsItem.id}, Expected ID: $newsItemId")
 
             if (newsItem.id == newsItemId) {
                 val newsImageUrl = newsItem.multimedia?.firstOrNull()?.url
@@ -105,6 +106,25 @@ fun NewsDetailScreen(
                             .size(40.dp)
                     ) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
+                    }
+
+                    // Favori butonu
+                    IconButton(
+                        onClick = {
+                            viewModel.toggleFavorite(newsItemId)
+                            isFavorite.value = !isFavorite.value
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.TopEnd)
+                            .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(50))
+                            .size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Bookmark,
+                            contentDescription = "Favorite",
+                            tint = if (isFavorite.value) Color.Red else Color.Black
+                        )
                     }
 
                     Column(
@@ -170,7 +190,6 @@ fun NewsDetailScreen(
                     }
                 }
             } else {
-                Log.e("NewsDetailScreen", "News Item Not Found for ID: $newsItemId")
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "News Item Not Found", color = Color.Red, fontSize = 18.sp)
                 }
@@ -179,7 +198,6 @@ fun NewsDetailScreen(
 
         is ApiResult.Error -> {
             val errorMessage = (newsDetailState as ApiResult.Error).exception.message
-            Log.e("NewsDetailScreen", "Error loading news details: $errorMessage")
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = errorMessage ?: "Error loading news details", color = Color.Red, fontSize = 18.sp)
             }

@@ -4,6 +4,7 @@ import com.example.newsmobileapplication.data.api.NewsApiService
 import com.example.newsmobileapplication.model.entities.Article
 import com.example.newsmobileapplication.model.entities.NewsItem
 import com.example.newsmobileapplication.utils.ApiResult
+import com.example.newsmobileapplication.utils.generateNewsItemId
 import javax.inject.Inject
 
 class FeedRepository @Inject constructor(
@@ -12,10 +13,11 @@ class FeedRepository @Inject constructor(
 
     suspend fun getNews(section: String): ApiResult<List<NewsItem>> {
         return try {
-            val response = apiService.getTopStories(section = section)
+            val response = apiService.getTopStories(section)
             if (response.isSuccessful) {
-                // Safely unwrap the response body
-                val newsList = response.body()?.results?.take(20) ?: emptyList()
+                val newsList = response.body()?.results?.map { newsItem ->
+                    newsItem.copy(id = generateNewsItemId(newsItem.url)) // URL'den id oluşturuyoruz
+                } ?: emptyList()
                 ApiResult.Success(newsList)
             } else {
                 val errorMessage = response.errorBody()?.string() ?: "Unknown error occurred"
@@ -25,6 +27,7 @@ class FeedRepository @Inject constructor(
             ApiResult.Error(e)
         }
     }
+
 
     suspend fun searchArticles(query: String): ApiResult<List<Article>> {
         return try {

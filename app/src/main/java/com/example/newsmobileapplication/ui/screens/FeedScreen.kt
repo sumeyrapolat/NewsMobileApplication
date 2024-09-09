@@ -67,6 +67,7 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                             onNewsClick = { newsItem ->
                                 val newsItemId = generateNewsItemId(newsItem.url)
                                 Log.d("FeedScreen", "Breaking News Clicked ID: $newsItemId") // Log ID
+                                Log.d("FeedScreen", "Generated ID in FeedScreen: $newsItemId")
                                 navController.navigate("newsDetail/$newsItemId")
                             }
                         )
