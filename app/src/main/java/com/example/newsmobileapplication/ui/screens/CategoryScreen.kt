@@ -1,5 +1,6 @@
 package com.example.newsmobileapplication.ui.screens
 
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +50,8 @@ fun CategoryScreen(
     categoryViewModel: CategoryViewModel = hiltViewModel(),
     onCategorySelected: (String) -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     var query by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
 
@@ -138,7 +142,7 @@ fun CategoryScreen(
                                 newsTitle = result.headline.main,
                                 newsAuthor = "• " + (result.byline.original ?: "Unknown author"),
                                 imageUrl = imageUrl,
-                                newsDate = formatDateTime(result.pubDate),
+                                newsDate = result.pubDate.let { formatDateTime(it) } ?: "Unknown Date",
                                 newsAbstract = result.abstract ?: "No abstract available",
                                 newsSection = result.sectionName,
                             )
@@ -171,22 +175,21 @@ fun CategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(newsList) { newsItem ->
-                            val newsItemId = newsItem.url?.let { generateNewsItemId(it) }
-                            if (newsItemId != null) {
+                            val newsItemId = generateNewsItemId(newsItem.url)
                                 Log.d("CategoryScreen", "Generated ID in CategoryScreen: $newsItemId")
                                 CategoryCardComponent(
                                     newsTitle = newsItem.title,
                                     newsAuthor = "• " + newsItem.byline,
-                                    newsDate = formatDateTime(newsItem.publishedDate),
+                                    newsDate = newsItem.publishedDate.let { formatDateTime(it) } ?: "Unknown Date", // Null kontrolü
+                                    newsContent = newsItem.abstract!!,
+                                    newsSection = newsItem.section,
                                     imageUrl = newsItem.multimedia?.firstOrNull()?.url,
                                     onClick = {
-                                        Log.d("CategoryScreen", "Clicked news ID: $newsItemId")
-                                        navController.navigate("newsDetail/$newsItemId")
+                                        // Haber URL'sini varsayılan tarayıcıda açma işlemi
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.url))
+                                        context.startActivity(intent) // URL'yi tarayıcıda aç
                                     }
                                 )
-                            } else {
-                                Log.e("CategoryScreen", "News URL is null, cannot generate ID")
-                            }
                         }
                     }
                 }

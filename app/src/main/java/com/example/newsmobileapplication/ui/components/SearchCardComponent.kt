@@ -124,11 +124,26 @@ fun SearchCardComponent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = newsAuthor,
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+                // Date and Author with 8f weight
+                Column(
+                    modifier = Modifier.weight(7f) // 8f weight
+                ) {
+                    // Date
+                    Text(
+                        text = newsDate,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Author
+                    Text(
+                        text = newsAuthor,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
             }
 
             // News Content

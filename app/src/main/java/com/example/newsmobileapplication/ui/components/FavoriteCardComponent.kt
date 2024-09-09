@@ -114,10 +114,11 @@ fun FavoriteCardComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp, bottom = 8.dp), // Row ile üstteki bileşen arasında padding
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Date and Author with 7f weight
                 Column(
+                    modifier = Modifier.weight(7f), // 7f weight
                     verticalArrangement = Arrangement.Center
                 ) {
                     // Date
@@ -137,10 +138,11 @@ fun FavoriteCardComponent(
                     )
                 }
 
-                // Favorite icon button
+                // Favorite icon with 1f weight
                 IconButton(
                     onClick = onRemoveClick,
                     modifier = Modifier
+                        .weight(1f) // 1f weight
                         .padding(8.dp)
                         .background(Color.LightGray.copy(0.5f), shape = RoundedCornerShape(50))
                         .size(32.dp) // Circle background size
@@ -153,6 +155,7 @@ fun FavoriteCardComponent(
                     )
                 }
             }
+
 
             // News Content
             Spacer(modifier = Modifier.height(8.dp))
