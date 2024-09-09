@@ -1,5 +1,6 @@
 package com.example.newsmobileapplication.data.api
 
+import com.example.newsmobileapplication.model.entities.ArticleSearchResponse
 import com.example.newsmobileapplication.model.entities.NewsResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,4 +14,12 @@ interface NewsApiService {
         @Path("section") section: String,
         @Query("api-key") apiKey: String = "92ZIMgWcxwAnfmnZpRDAZtfzclRPWgyO"
     ): Response<NewsResponse>
+
+
+    // Article Search API için metod ekliyoruz
+    @GET("svc/search/v2/articlesearch.json")
+    suspend fun searchArticles(
+        @Query("q") query: String, // Arama kelimesi
+        @Query("api-key") apiKey: String = "92ZIMgWcxwAnfmnZpRDAZtfzclRPWgyO"
+    ): Response<ArticleSearchResponse> // Arama sonuçları için özel bir response sınıfı
 }

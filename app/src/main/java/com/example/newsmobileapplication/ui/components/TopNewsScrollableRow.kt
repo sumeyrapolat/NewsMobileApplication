@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.model.entities.NewsItem
-import com.example.newsmobileapplication.ui.theme.KhasmirBlue
 import com.example.newsmobileapplication.ui.theme.Redwood
 import com.example.newsmobileapplication.utils.formatDateTime
 import kotlinx.coroutines.launch

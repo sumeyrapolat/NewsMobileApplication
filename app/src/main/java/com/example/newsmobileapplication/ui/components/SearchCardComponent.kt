@@ -29,9 +29,8 @@ import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.ui.theme.Platinum
 
 @Composable
-fun CategoryCardComponent(
+fun SearchCardComponent(
     newsTitle: String,
-    newsDate: String,
     newsAuthor: String,
     imageUrl: String?,
     onClick: () -> Unit
@@ -89,14 +88,6 @@ fun CategoryCardComponent(
                     color = Color.Black,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = newsDate,
-                    fontSize = 14.sp,
-                    color = Color.Gray,
                 )
             }
         }

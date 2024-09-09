@@ -3,32 +3,14 @@ package com.example.newsmobileapplication.ui.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,55 +22,50 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import com.example.newsmobileapplication.model.entities.NewsItem
+import com.example.newsmobileapplication.model.entities.Article
 import com.example.newsmobileapplication.utils.ApiResult
-import com.example.newsmobileapplication.viewmodel.FeedViewModel
+import com.example.newsmobileapplication.viewmodel.CategoryViewModel
 
 @Composable
-fun NewsDetailScreen(
+fun SearchNewsDetailScreen(
     navController: NavController,
-    newsItemId: String,
-    viewModel: FeedViewModel = hiltViewModel()
+    articleId: String,
+    viewModel: CategoryViewModel = hiltViewModel()
 ) {
-    Log.d("NewsDetailScreen", "News Item ID passed: $newsItemId")
+    Log.d("SearchNewsDetailScreen", "Article ID passed to detail screen: $articleId")
 
-    val newsItemsState by viewModel.newsItems.collectAsState()
+    // Observe the search results from the ViewModel
+    val searchResults by viewModel.searchResults.collectAsState()
 
-    LaunchedEffect(newsItemsState) {
-        if (newsItemsState is ApiResult.Success) {
-            Log.d("NewsDetailScreen", "News items successfully loaded, fetching news detail for ID: $newsItemId")
-            viewModel.fetchNewsItemById(newsItemId)
-        }
-    }
-
-    val newsDetailState by viewModel.newsDetail.collectAsState()
-
-    when (newsDetailState) {
+    when (searchResults) {
         is ApiResult.Loading -> {
-            Log.d("NewsDetailScreen", "Loading news details...")
+            // Display loading state if data is being fetched
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = Color.Gray)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Loading news details...", color = Color.DarkGray, fontSize = 18.sp)
+                Text(text = "Loading article details...", color = Color.DarkGray, fontSize = 18.sp)
             }
         }
 
         is ApiResult.Success -> {
-            val newsItem = (newsDetailState as ApiResult.Success<NewsItem>).data
-            Log.d("NewsDetailScreen", "Fetched News Item: ${newsItem.id}, Expected ID: $newsItemId")
+            // Get the article matching the passed articleId from the successful results
+            val searchArticle = (searchResults as ApiResult.Success<List<Article>>).data.find { it.id == articleId }
 
-            if (newsItem.id == newsItemId) {
-                val newsImageUrl = newsItem.multimedia?.firstOrNull()?.url
+            if (searchArticle != null) {
+                // Display article details
+                val articleImageUrl = searchArticle.multimedia?.firstOrNull()?.urlArticle?.let {
+                    "https://static01.nyt.com/$it"
+                }
 
                 Box(modifier = Modifier.fillMaxSize()) {
-                    if (!newsImageUrl.isNullOrEmpty()) {
+                    // Display the article image if available
+                    if (!articleImageUrl.isNullOrEmpty()) {
                         Image(
-                            painter = rememberAsyncImagePainter(model = newsImageUrl),
-                            contentDescription = "News Image",
+                            painter = rememberAsyncImagePainter(model = articleImageUrl),
+                            contentDescription = "Article Image",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .graphicsLayer { alpha = 0.8f },
@@ -96,6 +73,7 @@ fun NewsDetailScreen(
                         )
                     }
 
+                    // Back button
                     IconButton(
                         onClick = { navController.popBackStack() },
                         modifier = Modifier
@@ -107,6 +85,7 @@ fun NewsDetailScreen(
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
                     }
 
+                    // Main content: display the article details
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -120,7 +99,7 @@ fun NewsDetailScreen(
                                 .padding(horizontal = 15.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = newsItem.section.uppercase(),
+                                text = "SEARCH RESULT",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
@@ -129,6 +108,7 @@ fun NewsDetailScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Article details in a card
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
@@ -136,31 +116,35 @@ fun NewsDetailScreen(
                         ) {
                             LazyColumn(modifier = Modifier.padding(16.dp)) {
                                 item {
+                                    // Article title
                                     Text(
-                                        text = newsItem.title,
+                                        text = searchArticle.headline.main,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.Black
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
 
+                                    // Article byline (author)
                                     Text(
-                                        text = newsItem.byline ?: "Unknown author",
+                                        text = searchArticle.byline.original ?: "Unknown author",
                                         fontSize = 14.sp,
                                         color = Color.Gray
                                     )
                                     Spacer(modifier = Modifier.height(16.dp))
 
+                                    // Article summary
                                     Text(
-                                        text = newsItem.abstract ?: "No summary available",
+                                        text = searchArticle.leadParagraph ?: "Unknown summary",
                                         fontSize = 16.sp,
                                         color = Color.Black
                                     )
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
+                                    // External link to full article
                                     Text(
-                                        text = "Read more: ${newsItem.url}",
+                                        text = "Read more: ${searchArticle.webUrl}",
                                         fontSize = 14.sp,
                                         color = Color.Blue
                                     )
@@ -170,18 +154,24 @@ fun NewsDetailScreen(
                     }
                 }
             } else {
-                Log.e("NewsDetailScreen", "News Item Not Found for ID: $newsItemId")
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "News Item Not Found", color = Color.Red, fontSize = 18.sp)
+                // If article not found in the results, show a not found message
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Article not found.", color = Color.Red, fontSize = 18.sp)
                 }
             }
         }
 
         is ApiResult.Error -> {
-            val errorMessage = (newsDetailState as ApiResult.Error).exception.message
-            Log.e("NewsDetailScreen", "Error loading news details: $errorMessage")
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = errorMessage ?: "Error loading news details", color = Color.Red, fontSize = 18.sp)
+            // Show an error message if fetching search results failed
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val errorMessage = (searchResults as ApiResult.Error).exception.message
+                Text(text = errorMessage ?: "Failed to load article details", color = Color.Red, fontSize = 18.sp)
             }
         }
     }

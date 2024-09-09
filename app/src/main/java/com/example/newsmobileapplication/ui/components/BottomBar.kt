@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.newsmobileapplication.ui.theme.KhasmirBlue
-import com.example.newsmobileapplication.ui.theme.Martinique
-import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.ui.theme.GrayBlue
+import com.example.newsmobileapplication.ui.theme.SoftBlue
+
 
 @Composable
 fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>, onItemClick: (String) -> Unit) {
@@ -47,7 +47,7 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                         Icon(
                             item.icon,
                             contentDescription = item.route,
-                            tint = if (selected) KhasmirBlue else Color.Gray
+                            tint = if (selected) Color.White else Color.Gray
                         )
                     },
                     selected = selected,
@@ -57,9 +57,9 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = KhasmirBlue,
+                        selectedIconColor = Color.White,
                         unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.White
+                        indicatorColor = SoftBlue
                     )
                 )
             }
