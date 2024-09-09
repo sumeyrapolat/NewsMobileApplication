@@ -20,20 +20,21 @@ import com.example.newsmobileapplication.viewmodel.FeedViewModel
 fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hiltViewModel()) {
     // Observing favorite news items
     val favoriteNewsItems by viewModel.favoriteNewsItems.collectAsState()
+    val userName by viewModel.userName.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 12.dp, end = 12.dp, bottom = 12.dp) // General padding
     ) {
-        // Screen title
+
         Text(
-            text = "Saved Articles",
+            text = "Saved Articles for ${userName ?: "User"}", // Kullanıcı adıyla başlık
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier
-                .padding(8.dp) // Spacing between title and list
+                .padding(8.dp)
         )
 
         // Handle empty state (no favorites)

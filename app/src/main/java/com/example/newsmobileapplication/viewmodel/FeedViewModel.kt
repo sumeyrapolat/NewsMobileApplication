@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsmobileapplication.data.preferences.FavoriteManager
 import com.example.newsmobileapplication.model.entities.Article
 import com.example.newsmobileapplication.model.entities.NewsItem
+import com.example.newsmobileapplication.model.repository.AuthRepository
 import com.example.newsmobileapplication.model.repository.FeedRepository
 import com.example.newsmobileapplication.utils.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val repository: FeedRepository,
-    private val favoriteManager: FavoriteManager
+    private val favoriteManager: FavoriteManager,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _newsItems = MutableStateFlow<ApiResult<List<NewsItem>>>(ApiResult.Loading)
@@ -33,6 +35,20 @@ class FeedViewModel @Inject constructor(
     private val _newsDetail = MutableStateFlow<ApiResult<NewsItem>>(ApiResult.Loading)
     val newsDetail: StateFlow<ApiResult<NewsItem>> = _newsDetail
 
+    private val _userName = MutableStateFlow<String?>(null)
+    val userName: StateFlow<String?> = _userName
+
+    init {
+        // Kullanıcı verisini yükle
+        viewModelScope.launch {
+            val result = authRepository.loadCurrentUserData()
+            if (result.isSuccess) {
+                _userName.value = result.getOrNull()?.firstName // Kullanıcının adını yükle
+            } else {
+                _userName.value = "Unknown"
+            }
+        }
+    }
     init {
         fetchTopStories("home")  // Varsayılan olarak "home" haberlerini çekiyoruz
         loadFavorites()  // Favori haberleri başlatma sırasında yüklüyoruz
@@ -151,4 +167,6 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
+
+
 }
