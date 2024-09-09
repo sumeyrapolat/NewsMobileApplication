@@ -30,3 +30,4 @@ data class Multimedia(
     @SerializedName("caption") val caption: String?,
     @SerializedName("copyright") val copyright: String?
 )
+

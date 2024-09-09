@@ -1,19 +1,11 @@
 package com.example.newsmobileapplication.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,8 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.newsmobileapplication.ui.theme.KhasmirBlue
-import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.ui.theme.SoftBlue
 
 @Composable
 fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
@@ -41,7 +32,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
         selectedTabIndex = selectedCategoryIndex,
         edgePadding = 12.dp,
         backgroundColor = Color.White,
-        contentColor = KhasmirBlue,
+        contentColor = SoftBlue,
         indicator = { Box {} }, // Boş Box ile indicator'ı kaldırıyoruz
         divider = { Box {} }    // Divider'ı kaldırıyoruz
     ) {
@@ -56,7 +47,7 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
                     .padding(vertical = 4.dp, horizontal = 4.dp)
                     .clip(RoundedCornerShape(22.dp)) // Kenarları yuvarlak
                     .background(
-                        if (selectedCategoryIndex == index) KhasmirBlue else Color.Transparent
+                        if (selectedCategoryIndex == index) SoftBlue else Color.Transparent
                     ), // Seçili olan kutucuğun arka planını belirliyoruz
                 text = {
                     Text(

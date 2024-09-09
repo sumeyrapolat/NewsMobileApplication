@@ -53,7 +53,7 @@ fun LoginScreen(
 
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-    DarkBrown
+    NavyBlue
     val loginState = viewModel.loginState.collectAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -62,9 +62,8 @@ fun LoginScreen(
 
     val backgroundGradient = Brush.linearGradient(
         colors = listOf(
-            Martinique,
-            GrayBlue,
-            Bej,
+            NavyBlue,
+            DarkBlue
         ),
         start = Offset(0f, 0f),
         end = Offset(0f, context.resources.displayMetrics.heightPixels.toFloat()),
@@ -72,16 +71,16 @@ fun LoginScreen(
     )
 
     val radialOverlay = Brush.radialGradient(
-        colors = listOf(Redwood.copy(alpha = 0.6f), Color.Transparent),
+        colors = listOf(Color.Black.copy(alpha = 0.3f), Color.Transparent),
         center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 5),
         radius = context.resources.displayMetrics.heightPixels.toFloat() / 3
     )
 
     val buttonBackgroundColor = Brush.linearGradient(
         colors = listOf(
-            Redwood,
-            DarkBrown,
-            Redwood
+            SoftBlue,
+            GrayBlue,
+            SoftBlue
         ),
         start = Offset(0f, 0f),
         end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
@@ -106,7 +105,7 @@ fun LoginScreen(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = (Color.White.copy(0.8f))
+                    containerColor = (Color.White)
                 )
             ) {
 
@@ -120,7 +119,7 @@ fun LoginScreen(
                         text = "Login",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Redwood,
+                        color = NavyBlue,
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -186,7 +185,7 @@ fun LoginScreen(
                             checked = rememberMeChecked.value,
                             onCheckedChange = { rememberMeChecked.value = it },
                             colors = CheckboxDefaults.colors(
-                                checkedColor = Redwood, // Seçili olduğunda checkbox rengi
+                                checkedColor =  GrayBlue, // Seçili olduğunda checkbox rengi
                                 uncheckedColor = Color.Gray, // Seçilmediğinde checkbox rengi
                                 checkmarkColor = Color.White // Tik işaretinin rengi
                             )
@@ -196,7 +195,7 @@ fun LoginScreen(
                             text = "Remember Me",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Redwood // Estetik bir text rengi seçiyoruz
+                            color =  Color.Black,
                         )
                     }
 
@@ -233,7 +232,7 @@ fun LoginScreen(
                         Text(
                             text = "Don't have an account? Sign Up",
                             fontSize = 16.sp,
-                            color = Redwood
+                            color =  NavyBlue
                         )
                     }
 
@@ -244,7 +243,7 @@ fun LoginScreen(
                         Text(
                             text = "Forgot Password",
                             fontSize = 16.sp,
-                            color = Redwood
+                            color =  NavyBlue
                         )
                     }
                 }
@@ -256,7 +255,7 @@ fun LoginScreen(
                     title = {
                         Text(
                             "Reset Password",
-                            color = Redwood,
+                            color =  NavyBlue,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -283,7 +282,7 @@ fun LoginScreen(
                                 showResetPasswordDialog.value = false
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Redwood,
+                                containerColor = GrayBlue,
                                 contentColor = Color.White
                             )
                         ) {
@@ -296,7 +295,7 @@ fun LoginScreen(
                         ) {
                             Text(
                                 "Cancel",
-                                color = Redwood
+                                color =NavyBlue
                             )
                         }
                     },

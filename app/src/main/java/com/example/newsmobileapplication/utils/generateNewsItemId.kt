@@ -1,6 +1,10 @@
 package com.example.newsmobileapplication.utils
 
-// Fonksiyonu sadece String parametresi alacak şekilde güncelliyoruz
-fun generateNewsItemId(url: String): String {
-    return url.hashCode().toString()
+import android.util.Log
+
+fun generateNewsItemId(newsUrl: String): String {
+    val id = newsUrl.hashCode().toString()
+    Log.d("generateNewsItemId", "Generated ID for URL $newsUrl: $id")
+    return id
 }
+

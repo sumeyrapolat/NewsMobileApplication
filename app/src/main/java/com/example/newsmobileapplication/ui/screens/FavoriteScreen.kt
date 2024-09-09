@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -17,46 +18,59 @@ import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
 @Composable
 fun FavoriteScreen(navController: NavController, viewModel: FeedViewModel = hiltViewModel()) {
-    // Favori haberleri state ile yönetiyoruz, favoriden çıkarıldıkça güncellenmesi için
+    // Observing favorite news items
     val favoriteNewsItems by viewModel.favoriteNewsItems.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start= 12.dp, end = 12.dp, bottom = 12.dp) // Genel padding
+            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp) // General padding
     ) {
-        // Ekranın üstüne başlık ekliyoruz
+        // Screen title
         Text(
             text = "Saved Articles",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,  // Siyah renk
+            color = Color.Black,
             modifier = Modifier
-                .padding(8.dp) // Başlık ve liste arasına boşluk ekliyoruz
+                .padding(8.dp) // Spacing between title and list
         )
 
-        // Favori haberlerin listesi
-        LazyColumn {
-            items(favoriteNewsItems) { newsItem ->
-                // multimedia listesinden ilk görseli alıyoruz
-                val imageUrl = newsItem.multimedia?.firstOrNull()?.url
-
-                FavoriteCardComponent(
-                    newsTitle = newsItem.title,
-                    newsContent = newsItem.abstract ?: "No content available",  // abstract alanı kullanılıyor
-                    newsSection = newsItem.section,
-                    newsDate = newsItem.publishedDate,
-                    newsAuthor = "• " + newsItem.byline,
-                    imageUrl = imageUrl,
-                    onClick = {
-                        // Habere tıklayınca detay sayfasına gitme işlemi
-                        navController.navigate("newsDetail/${newsItem.id}")
-                    },
-                    onRemoveClick = {
-                        // Favorilerden çıkarma işlemi
-                        viewModel.toggleFavorite(newsItem.id)  // Favori durumunu değiştiriyoruz
-                    }
+        // Handle empty state (no favorites)
+        if (favoriteNewsItems.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = "No saved articles.",
+                    fontSize = 18.sp,
+                    color = Color.Gray
                 )
+            }
+        } else {
+            // Sort favorite news items by date (descending) to show the latest ones first
+            val sortedFavorites = favoriteNewsItems.sortedByDescending { it.publishedDate }
+
+            // List of favorite news items
+            LazyColumn {
+                items(sortedFavorites) { newsItem ->
+                    val imageUrl = newsItem.multimedia?.firstOrNull()?.url
+
+                    FavoriteCardComponent(
+                        newsTitle = newsItem.title,
+                        newsContent = newsItem.abstract ?: "No content available",  // Use abstract if available
+                        newsSection = newsItem.section,
+                        newsDate = newsItem.publishedDate,
+                        newsAuthor = "• " + newsItem.byline,
+                        imageUrl = imageUrl,
+                        onClick = {
+                            // Navigate to news detail screen
+                            navController.navigate("newsDetail/${newsItem.id}")
+                        },
+                        onRemoveClick = {
+                            // Remove from favorites
+                            viewModel.toggleFavorite(newsItem.id)  // Toggle favorite status
+                        }
+                    )
+                }
             }
         }
     }

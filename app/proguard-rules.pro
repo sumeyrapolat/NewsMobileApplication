@@ -36,3 +36,10 @@
 
 # Prevent issues related to generics by keeping signatures
 -keepattributes Signature
+
+# Gson için gerekli kurallar
+-keep class com.google.gson.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class * extends com.google.gson.TypeAdapter
+
