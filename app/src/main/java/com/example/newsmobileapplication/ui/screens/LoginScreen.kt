@@ -1,7 +1,6 @@
 package com.example.newsmobileapplication.ui.screens
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +34,7 @@ import com.example.newsmobileapplication.ui.theme.*
 import com.example.newsmobileapplication.utils.LoginState
 import com.example.newsmobileapplication.viewmodel.AuthViewModel
 import com.example.newsmobileapplication.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -43,50 +43,25 @@ fun LoginScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     preferencesManager: PreferencesManager = PreferencesManager(LocalContext.current)
 ) {
-
     val context = LocalContext.current
     val email = remember { mutableStateOf(preferencesManager.getEmail() ?: "") }
     val password = remember { mutableStateOf("") }
     val passwordVisible = remember { mutableStateOf(false) }
     val showResetPasswordDialog = remember { mutableStateOf(false) }
     val rememberMeChecked = remember { mutableStateOf(preferencesManager.isRememberMeChecked()) }
-
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-    NavyBlue
     val loginState = viewModel.loginState.collectAsState()
-
     val keyboardController = LocalSoftwareKeyboardController.current
-
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     val backgroundGradient = Brush.linearGradient(
-        colors = listOf(
-            NavyBlue,
-            DarkBlue
-        ),
+        colors = listOf(NavyBlue, DarkBlue),
         start = Offset(0f, 0f),
         end = Offset(0f, context.resources.displayMetrics.heightPixels.toFloat()),
         tileMode = TileMode.Clamp
     )
-
-    val radialOverlay = Brush.radialGradient(
-        colors = listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent),
-        center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 5),
-        radius = context.resources.displayMetrics.heightPixels.toFloat() / 3
-    )
-
-    val buttonBackgroundColor = Brush.linearGradient(
-        colors = listOf(
-            SoftBlue,
-            GrayBlue,
-            SoftBlue
-        ),
-        start = Offset(0f, 0f),
-        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-    )
-
-    val textColor = Color.White
 
     Box(
         modifier = Modifier
@@ -95,35 +70,27 @@ fun LoginScreen(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(radialOverlay),
+                .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = (Color.White)
-                )
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 60.dp)
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     Spacer(modifier = Modifier.height(24.dp))
-
                     Text(
                         text = "Login",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = NavyBlue,
                     )
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     OutlinedTextField(
                         value = email.value,
                         onValueChange = { email.value = it },
@@ -132,12 +99,8 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(10.dp),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { passwordFocusRequester.requestFocus() }
-                        )
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() })
                     )
                     Spacer(modifier = Modifier.height(18.dp))
                     OutlinedTextField(
@@ -150,30 +113,15 @@ fun LoginScreen(
                         shape = RoundedCornerShape(8.dp),
                         visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image = if (passwordVisible.value) {
-                                Icons.Default.Visibility
-                            } else {
-                                Icons.Default.VisibilityOff
-                            }
-                            IconButton(onClick = {
-                                passwordVisible.value = !passwordVisible.value
-                            }) {
+                            val image = if (passwordVisible.value) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
                                 Icon(imageVector = image, contentDescription = null)
                             }
                         },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
-                        )
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    // Remember Me Checkbox bileşenini daha estetik hale getiriyoruz
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start,
@@ -185,27 +133,29 @@ fun LoginScreen(
                             checked = rememberMeChecked.value,
                             onCheckedChange = { rememberMeChecked.value = it },
                             colors = CheckboxDefaults.colors(
-                                checkedColor =  GrayBlue, // Seçili olduğunda checkbox rengi
-                                uncheckedColor = Color.Gray, // Seçilmediğinde checkbox rengi
-                                checkmarkColor = Color.White // Tik işaretinin rengi
+                                checkedColor = GrayBlue,
+                                uncheckedColor = Color.Gray,
+                                checkmarkColor = Color.White
                             )
                         )
-                        Spacer(modifier = Modifier.width(8.dp)) // Checkbox ile text arasına boşluk ekliyoruz
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Remember Me",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color =  Color.Black,
+                            color = Color.Black,
                         )
                     }
-
-
                     Spacer(modifier = Modifier.height(30.dp))
-
                     Button(
                         onClick = {
                             if (password.value.length < 8) {
-                                Toast.makeText(context, "Password must be at least 8 characters!", Toast.LENGTH_SHORT).show()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Please enter a valid password!",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             } else {
                                 if (rememberMeChecked.value) {
                                     preferencesManager.saveLoginData(email.value, true)
@@ -216,49 +166,28 @@ fun LoginScreen(
                             }
                         },
                         shape = RoundedCornerShape(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = textColor
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.White),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(buttonBackgroundColor, shape = RoundedCornerShape(45.dp))
+                            .background(Brush.linearGradient(listOf(SoftBlue, GrayBlue, SoftBlue)), shape = RoundedCornerShape(45.dp))
                     ) {
                         Text(text = "Login", modifier = Modifier.padding(8.dp), fontSize = 18.sp)
                     }
-
                     Spacer(modifier = Modifier.height(20.dp))
                     TextButton(onClick = { navController.navigate("signup") }) {
-                        Text(
-                            text = "Don't have an account? Sign Up",
-                            fontSize = 16.sp,
-                            color =  NavyBlue
-                        )
+                        Text(text = "Don't have an account? Sign Up", fontSize = 16.sp, color = NavyBlue)
                     }
-
                     Spacer(modifier = Modifier.height(5.dp))
-                    TextButton(onClick = {
-                        showResetPasswordDialog.value = true
-                    }) {
-                        Text(
-                            text = "Forgot Password",
-                            fontSize = 16.sp,
-                            color =  NavyBlue
-                        )
+                    TextButton(onClick = { showResetPasswordDialog.value = true }) {
+                        Text(text = "Forgot Password", fontSize = 16.sp, color = NavyBlue)
                     }
                 }
             }
-
             if (showResetPasswordDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showResetPasswordDialog.value = false },
                     title = {
-                        Text(
-                            "Reset Password",
-                            color =  NavyBlue,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text("Reset Password", color = NavyBlue, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     },
                     text = {
                         Column {
@@ -281,60 +210,51 @@ fun LoginScreen(
                                 authViewModel.forgotPassword(email.value)
                                 showResetPasswordDialog.value = false
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = GrayBlue,
-                                contentColor = Color.White
-                            )
+                            colors = ButtonDefaults.buttonColors(containerColor = GrayBlue, contentColor = Color.White)
                         ) {
                             Text("Send")
                         }
                     },
                     dismissButton = {
-                        TextButton(
-                            onClick = { showResetPasswordDialog.value = false }
-                        ) {
-                            Text(
-                                "Cancel",
-                                color =NavyBlue
-                            )
+                        TextButton(onClick = { showResetPasswordDialog.value = false }) {
+                            Text("Cancel", color = NavyBlue)
                         }
                     },
                     containerColor = Color.White.copy(0.9f),
                     shape = RoundedCornerShape(25.dp)
                 )
             }
-
-            when (loginState.value) {
-                is LoginState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+            LaunchedEffect(key1 = loginState.value) {
+                when (loginState.value) {
+                    is LoginState.Loading -> {
+                        // Optionally handle loading state
                     }
-                }
-                is LoginState.Success -> {
-                    authViewModel.loadUserData()
-                    navController.navigate("feed")
-                }
-                is LoginState.Error -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = (loginState.value as LoginState.Error).error,
-                            color = Color.Red,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(16.dp)
+                    is LoginState.Success -> {
+                        authViewModel.loadUserData()
+                        navController.navigate("feed")
+                    }
+                    is LoginState.Error -> {
+                        snackbarHostState.showSnackbar(
+                            message = (loginState.value as LoginState.Error).error,
+                            duration = SnackbarDuration.Short
                         )
                     }
-                }
-                else -> {
-                    Log.d("SignInScreen", "Unknown state: ${loginState.value}")
+                    else -> {
+                        Log.d("SignInScreen", "Unknown state: ${loginState.value}")
+                    }
                 }
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            snackbar = { snackbarData ->
+                Snackbar(
+                    snackbarData = snackbarData,
+                    containerColor = Redwood,
+                    contentColor = Color.White
+                )
+            },
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
