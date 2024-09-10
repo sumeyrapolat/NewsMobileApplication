@@ -63,6 +63,7 @@ Aşağıda uygulamanın bazı ekran görüntülerini bulabilirsiniz:
 ## Kullanılan Teknolojiler:
 - **Kotlin**: Android geliştirme dili
 - **MVVM Mimarisi**: Projenin temel mimarisi
+- **Jetpack Compose**: Uygulamanın arayüz tasarımı tamamen Jetpack Compose ile yapılmıştır
 - **Retrofit**: API istekleri için
 - **Dagger Hilt**: Bağımlılık enjeksiyonu için
 - **Firebase Authentication**: Kullanıcı girişi ve kaydı için
@@ -150,6 +151,7 @@ Below are some screenshots of the application:
 ## Technologies Used:
 - **Kotlin**: Programming language for Android development
 - **MVVM Architecture**: Core architecture of the project
+- **Jetpack Compose**: Used entirely for the app's UI design
 - **Retrofit**: For handling API requests
 - **Dagger Hilt**: For dependency injection
 - **Firebase Authentication**: For user login and registration
