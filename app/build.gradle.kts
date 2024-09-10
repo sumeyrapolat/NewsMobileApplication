@@ -8,7 +8,6 @@ plugins {
     id ("com.google.devtools.ksp")
     alias(libs.plugins.google.gms.google.services)
 }
-
 android {
     namespace = "com.example.newsmobileapplication"
     compileSdk = 34
@@ -24,6 +23,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // API Key'i BuildConfig ile ekliyoruz
+        buildConfigField("String", "NEWS_API_KEY", "\"LHbQVLLgjTZAMrtllALJRTAeMiQEMLva\"")
+
+
     }
 
     buildTypes {
@@ -43,6 +47,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -54,6 +59,7 @@ android {
         }
     }
 }
+
 
 val nav_version = "2.7.7"
 
