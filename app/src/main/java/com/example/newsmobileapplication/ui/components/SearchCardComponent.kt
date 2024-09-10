@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.ui.theme.Platinum
 import com.example.newsmobileapplication.ui.theme.Redwood
+import com.example.newsmobileapplication.ui.theme.SoftBlue
 import com.example.newsmobileapplication.utils.formatDateTime
 
 @Composable
@@ -45,7 +48,8 @@ fun SearchCardComponent(
     newsDate: String,
     newsAbstract: String,
     newsSection: String,
-    imageUrl: String?
+    imageUrl: String?,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -156,6 +160,16 @@ fun SearchCardComponent(
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Read More Button
+            Button(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = SoftBlue)
+            ) {
+                Text(text = "Read More", color = Color.White)
+            }
         }
     }
 }

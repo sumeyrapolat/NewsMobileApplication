@@ -145,6 +145,10 @@ fun CategoryScreen(
                                 newsDate = result.pubDate.let { formatDateTime(it) } ?: "Unknown Date",
                                 newsAbstract = result.abstract ?: "No abstract available",
                                 newsSection = result.sectionName,
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(result.webUrl))
+                                    context.startActivity(intent)
+                                }
                             )
                         }
                     }
@@ -184,9 +188,8 @@ fun CategoryScreen(
                                     newsSection = newsItem.section,
                                     imageUrl = newsItem.multimedia?.firstOrNull()?.url,
                                     onClick = {
-                                        // Haber URL'sini varsayılan tarayıcıda açma işlemi
                                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.url))
-                                        context.startActivity(intent) // URL'yi tarayıcıda aç
+                                        context.startActivity(intent)
                                     }
                                 )
                         }
