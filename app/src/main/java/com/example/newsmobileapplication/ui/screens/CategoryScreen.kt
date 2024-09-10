@@ -176,7 +176,6 @@ fun CategoryScreen(
                     ) {
                         items(newsList) { newsItem ->
                             val newsItemId = generateNewsItemId(newsItem.url)
-                                Log.d("CategoryScreen", "Generated ID in CategoryScreen: $newsItemId")
                                 CategoryCardComponent(
                                     newsTitle = newsItem.title,
                                     newsAuthor = "• " + newsItem.byline,

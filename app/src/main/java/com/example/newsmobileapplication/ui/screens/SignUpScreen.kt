@@ -61,7 +61,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
     )
 
     val radialOverlay = Brush.radialGradient(
-        colors = listOf(Color.Black.copy(alpha = 0.3f), Color.Transparent),
+        colors = listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent),
         center = Offset(context.resources.displayMetrics.widthPixels.toFloat() / 2, context.resources.displayMetrics.heightPixels.toFloat() / 5),
         radius = context.resources.displayMetrics.heightPixels.toFloat() / 3
     )
