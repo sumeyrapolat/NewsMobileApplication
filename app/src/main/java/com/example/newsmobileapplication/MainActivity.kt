@@ -10,11 +10,13 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmarks
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.TravelExplore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -75,14 +77,14 @@ fun MainScreen(navController: NavHostController, authRepository: AuthRepository)
         ),
         BottomNavItem(
             route = "category",
-            icon = Icons.Filled.Search,
+            icon = Icons.Filled.TravelExplore,
             label = "Category",
             onClick = { navController.navigate("category") }
         ),
         BottomNavItem(
             route = "favorites",
             icon = Icons.Filled.Bookmarks,
-            label = "Favorites",
+            label = "Saved",
             onClick = { navController.navigate("favorites") }
         )
     )

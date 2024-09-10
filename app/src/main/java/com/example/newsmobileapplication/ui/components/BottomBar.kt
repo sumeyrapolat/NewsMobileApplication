@@ -1,20 +1,30 @@
 package com.example.newsmobileapplication.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.newsmobileapplication.ui.theme.GrayBlue
@@ -44,11 +54,26 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                 val selected = currentRoute == item.route
                 NavigationBarItem(
                     icon = {
-                        Icon(
-                            item.icon,
-                            contentDescription = item.route,
-                            tint = if (selected) Color.White else Color.Gray
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically, // İcon ve metni ortala
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label,
+                                tint = if (selected) Color.White else Color.Gray,
+                                modifier = Modifier.size(26.dp)
+                            )
+                            if (selected) {
+                                Spacer(modifier = Modifier.width(8.dp)) // Simge ile metin arasına boşluk
+                                Text(
+                                    text = item.label,
+                                    color = Color.White,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
                     },
                     selected = selected,
                     onClick = {
@@ -66,7 +91,6 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
         }
     }
 }
-
 
 data class BottomNavItem(
     val route: String,
