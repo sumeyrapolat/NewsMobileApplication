@@ -47,15 +47,15 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
         NavigationBar(
             containerColor = Color.Transparent,
             contentColor = Color.White,
-            tonalElevation = 0.dp, // Flatten the elevation if needed
-            modifier = Modifier.height(88.dp) // Standard height for a compact bottom bar
+            tonalElevation = 0.dp,
+            modifier = Modifier.height(88.dp)
         ) {
             bottomNavItems.forEach { item ->
                 val selected = currentRoute == item.route
                 NavigationBarItem(
                     icon = {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically, // İcon ve metni ortala
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.padding(4.dp)
                         ) {
@@ -66,7 +66,7 @@ fun BottomBar(navController: NavController, bottomNavItems: List<BottomNavItem>,
                                 modifier = Modifier.size(26.dp)
                             )
                             if (selected) {
-                                Spacer(modifier = Modifier.width(8.dp)) // Simge ile metin arasına boşluk
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = item.label,
                                     color = Color.White,

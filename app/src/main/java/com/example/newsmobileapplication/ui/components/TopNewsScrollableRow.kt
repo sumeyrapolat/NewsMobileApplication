@@ -33,15 +33,14 @@ import kotlin.math.roundToInt
 
 @Composable
 fun TopNewsScrollableRow(
-    topNewsItems: List<NewsItem>, // List of top news items
+    topNewsItems: List<NewsItem>,
     onNewsClick: (NewsItem) -> Unit
 ) {
-    val listState = rememberLazyListState() // Kaydırma durumunu izlemek için LazyListState
+    val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    var currentIndex by remember { mutableStateOf(0) } // Aktif indexi izlemek için
-    val density = LocalDensity.current // LocalDensity kullanarak dp to px dönüşümü
+    var currentIndex by remember { mutableStateOf(0) }
+    val density = LocalDensity.current
 
-    // Kart boyutları ve boşlukların px'e dönüştürülmesi
     val itemWidthPx = with(density) { 300.dp.toPx() }
     val itemSpacingPx = with(density) { 6.dp.toPx() }
 
@@ -61,7 +60,6 @@ fun TopNewsScrollableRow(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Göstergeler (dots)
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
@@ -75,14 +73,13 @@ fun TopNewsScrollableRow(
                         .background(if (index == currentIndex) Color.Black else Color.LightGray)
                         .clickable {
                             coroutineScope.launch {
-                                listState.animateScrollToItem(index) // Dot tıklandığında o sıradaki habere geçiyoruz
+                                listState.animateScrollToItem(index)
                             }
                         }
                 )
             }
         }
 
-        // Kaydırma durumu izleniyor ve currentIndex güncelleniyor
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             val visibleItemIndex = listState.firstVisibleItemIndex
             val visibleItemOffset = listState.firstVisibleItemScrollOffset.toFloat()
@@ -98,34 +95,31 @@ fun TopNewsScrollableRow(
 fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .height(300.dp) // Card boyutu ayarlanıyor
+            .height(300.dp)
             .width(400.dp)
             .padding(8.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp) // Köşeleri yuvarlatılmış card
+        shape = RoundedCornerShape(12.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Haber görseli
             if (newsItem.multimedia?.firstOrNull()?.url != null) {
                 Image(
                     painter = rememberImagePainter(newsItem.multimedia.firstOrNull()?.url),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp)), // Köşeler yuvarlanıyor
-                    contentScale = ContentScale.Crop // Görselin kesilmesini önlemek için Crop
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
                 )
             }
-            // Üst katman: Section ve Başlık
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.2f)) // Görsel üzerinde yarı saydam arka plan
+                    .background(Color.Black.copy(alpha = 0.2f))
                     .padding(8.dp),
-                verticalArrangement = Arrangement.Bottom, // En alta yerleştiriyoruz
+                verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
-                // Section
                 Text(
                     text = newsItem.section.uppercase(),
                     fontSize = 12.sp,
@@ -137,7 +131,6 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
-                //date
                 Text(
                     text = formatDateTime(newsItem.publishedDate),
                     fontSize = 14.sp,
@@ -150,7 +143,6 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Başlık
                 Text(
                     text = newsItem.title,
                     fontSize = 18.sp,
@@ -163,4 +155,3 @@ fun TopNewsCard(newsItem: NewsItem, onClick: () -> Unit) {
         }
     }
 }
-

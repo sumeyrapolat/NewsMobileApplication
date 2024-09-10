@@ -27,13 +27,12 @@ import com.example.newsmobileapplication.viewmodel.FeedViewModel
 
 @Composable
 fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltViewModel()) {
-    val newsState by viewModel.newsItems.collectAsState() // Using ApiResult
+    val newsState by viewModel.newsItems.collectAsState()
 
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (newsState) {
             is ApiResult.Loading -> {
-                // Show loading spinner
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -52,7 +51,6 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                         .fillMaxSize()
                         .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
                 ) {
-                    // Breaking News (En son yayınlanan ilk 5 haber)
                     Text(
                         text = "Breaking News",
                         fontSize = 24.sp,
@@ -61,12 +59,11 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                     )
 
                     if (topNewsItems.isNotEmpty()) {
-                        // Scrollable Row with Top 5 News
                         TopNewsScrollableRow(
                             topNewsItems = topNewsItems,
                             onNewsClick = { newsItem ->
                                 val newsItemId = generateNewsItemId(newsItem.url)
-                                Log.d("FeedScreen", "Breaking News Clicked ID: $newsItemId") // Log ID
+                                Log.d("FeedScreen", "Breaking News Clicked ID: $newsItemId")
                                 Log.d("FeedScreen", "Generated ID in FeedScreen: $newsItemId")
                                 navController.navigate("newsDetail/$newsItemId")
                             }
@@ -75,7 +72,6 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Recommendation (İlk 5 haricindeki haberler)
                     Text(
                         text = "Recommendation",
                         fontSize = 24.sp,
@@ -95,7 +91,7 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
                                 newsDate = formatDateTime(newsItem.publishedDate),
                                 newsAuthor = "• " + newsItem.byline,
                                 onClick = {
-                                    Log.d("FeedScreen", "Recommendation News Clicked ID: $newsItemId") // Log ID
+                                    Log.d("FeedScreen", "Recommendation News Clicked ID: $newsItemId")
                                     navController.navigate("newsDetail/$newsItemId")
                                 }
                             )
@@ -105,7 +101,6 @@ fun FeedScreen(navController: NavController, viewModel: FeedViewModel = hiltView
             }
 
             is ApiResult.Error -> {
-                // Handle error state
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center

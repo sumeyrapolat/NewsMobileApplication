@@ -26,40 +26,39 @@ fun CategoryScrollableRow(onCategorySelected: (String) -> Unit) {
         "World", "Politics", "Business", "Technology", "Health",
         "Sports", "Movies", "Fashion", "Science", "Travel", "Arts", "Upshot"
     )
-    var selectedCategoryIndex by remember { mutableStateOf(0) } // Default olarak World seçili
+    var selectedCategoryIndex by remember { mutableStateOf(0) }
 
     ScrollableTabRow(
         selectedTabIndex = selectedCategoryIndex,
         edgePadding = 12.dp,
         backgroundColor = Color.White,
         contentColor = SoftBlue,
-        indicator = { Box {} }, // Boş Box ile indicator'ı kaldırıyoruz
-        divider = { Box {} }    // Divider'ı kaldırıyoruz
+        indicator = { Box {} },
+        divider = { Box {} }
     ) {
         categories.forEachIndexed { index, category ->
             Tab(
                 selected = selectedCategoryIndex == index,
                 onClick = {
                     selectedCategoryIndex = index
-                    onCategorySelected(category) // Seçilen kategoriyi çağırıyoruz
+                    onCategorySelected(category)
                 },
                 modifier = Modifier
                     .padding(vertical = 4.dp, horizontal = 4.dp)
-                    .clip(RoundedCornerShape(22.dp)) // Kenarları yuvarlak
+                    .clip(RoundedCornerShape(22.dp))
                     .background(
                         if (selectedCategoryIndex == index) SoftBlue else Color.Transparent
-                    ), // Seçili olan kutucuğun arka planını belirliyoruz
+                    ),
                 text = {
                     Text(
                         text = category,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
-                        color = if (selectedCategoryIndex == index) Color.White else Color.Gray, // Seçili olanın rengi beyaz
+                        color = if (selectedCategoryIndex == index) Color.White else Color.Gray,
                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
                     )
                 }
             )
         }
     }
-
 }

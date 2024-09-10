@@ -1,19 +1,17 @@
-# Add project specific ProGuard rules here.
+# Add project-specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #
-# For more details, see
+# For more details, see:
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
+# If your project uses WebView with JavaScript, uncomment the following
+# and specify the fully qualified class name of the JavaScript interface class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
+# Uncomment this to preserve the line number information for debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
@@ -37,9 +35,17 @@
 # Prevent issues related to generics by keeping signatures
 -keepattributes Signature
 
-# Gson için gerekli kurallar
+# Gson-specific rules
 -keep class com.google.gson.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class * extends com.google.gson.TypeAdapter
 
+# Remove log messages in the release build by optimizing them
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+}

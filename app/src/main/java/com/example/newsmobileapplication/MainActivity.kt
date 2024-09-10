@@ -65,7 +65,7 @@ fun MainScreen(navController: NavHostController, authRepository: AuthRepository)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
 
-    var showMenu = remember { mutableStateOf(false) } // Menü için durum
+    val showMenu = remember { mutableStateOf(false) } // Menü için durum
 
     // Define the Bottom Navigation items (Home, Favorites, and Category)
     val bottomNavItems = listOf(
@@ -113,17 +113,17 @@ fun MainScreen(navController: NavHostController, authRepository: AuthRepository)
                                 text = {
                                     Box(
                                         modifier = Modifier
-                                            .fillMaxWidth() // Genişliği tam olarak doldur
-                                            .padding(8.dp) // İçerik etrafına boşluk
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
                                     ) {
                                         Text("Sign Out", color = NavyBlue, fontWeight = FontWeight.SemiBold, fontSize = 20.sp) // Text rengi ayarlanıyor
                                     }
                                        },
                                 onClick = {
-                                    authRepository.signOut() // Çıkış işlemi
+                                    authRepository.signOut()
                                     navController.navigate("login") {
                                         popUpTo(navController.graph.startDestinationId) {
-                                            inclusive = true // Stack'i temizle
+                                            inclusive = true
                                         }
                                     }
                                     showMenu.value = false

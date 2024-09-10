@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
+    // Provides a singleton instance of FeedRepository
     @Provides
     @Singleton
     fun provideFeedRepository(
@@ -21,3 +22,4 @@ object RepositoryModule {
         return FeedRepository(apiService)
     }
 }
+

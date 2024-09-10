@@ -39,22 +39,19 @@ class FeedViewModel @Inject constructor(
     val userName: StateFlow<String?> = _userName
 
     init {
-        // Kullanıcı verisini yükle
         viewModelScope.launch {
             val result = authRepository.loadCurrentUserData()
             if (result.isSuccess) {
-                _userName.value = result.getOrNull()?.firstName // Kullanıcının adını yükle
+                _userName.value = result.getOrNull()?.firstName
             } else {
                 _userName.value = "Unknown"
             }
         }
     }
     init {
-        fetchTopStories("home")  // Varsayılan olarak "home" haberlerini çekiyoruz
-        loadFavorites()  // Favori haberleri başlatma sırasında yüklüyoruz
+        fetchTopStories("home")
+        loadFavorites()
     }
-
-
 
     fun toggleFavorite(newsId: String) {
         viewModelScope.launch {
@@ -63,17 +60,15 @@ class FeedViewModel @Inject constructor(
             } else {
                 favoriteManager.addFavorite(newsId)
             }
-            // Haberler yüklü değilse, tekrar yüklemeyi bekleyin
             val newsItemsResult = _newsItems.value
             if (newsItemsResult is ApiResult.Success) {
-                loadFavorites()  // Favoriler değiştikten sonra tekrar favorileri yüklüyoruz
+                loadFavorites()
             }
         }
     }
 
-    // Kategorilere göre haber çekme
     fun fetchNewsByCategory(section: String) {
-        fetchTopStories(section) // Kategorilere göre aynı "Top Stories" mantığı uygulanır
+        fetchTopStories(section)
     }
 
     private fun loadFavorites() {
@@ -92,20 +87,18 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-
-    // Bir haber favori mi kontrol ediyoruz
     fun isFavorite(newsId: String): Boolean {
         return favoriteManager.isFavorite(newsId)
     }
 
     fun fetchTopStories(section: String) {
         viewModelScope.launch {
-            _newsItems.value = ApiResult.Loading  // İlk başta yükleme durumu
+            _newsItems.value = ApiResult.Loading
 
             try {
                 val result = repository.getNews(section)
-                _newsItems.value = result  // Sonucu (Success/Error) set ediyoruz
-                loadFavorites()  // Haberler geldikten sonra favorileri yüklüyoruz
+                _newsItems.value = result
+                loadFavorites()
             } catch (e: Exception) {
                 _newsItems.value = ApiResult.Error(e)
                 Log.e("FeedViewModel", "Error fetching top stories: ${e.message}")
@@ -118,55 +111,31 @@ class FeedViewModel @Inject constructor(
         viewModelScope.launch {
             _newsDetail.value = ApiResult.Loading
             try {
-                // Haberlerin güncel olduğundan emin ol
                 val newsItemsResult = _newsItems.value
                 if (newsItemsResult is ApiResult.Success) {
-                    // ID ile haber arama
                     val newsItem = newsItemsResult.data.find { it.id == newsItemId }
                     if (newsItem != null) {
                         _newsDetail.value = ApiResult.Success(newsItem)
                         Log.d("FeedViewModel", "Fetched News Item: ${newsItem.id}")
                     } else {
-                        // Eğer ID ile haber bulunamazsa, kullanıcıya bilgi ver
                         _newsDetail.value = ApiResult.Error(Exception("News item not found for ID: $newsItemId"))
                         Log.e("FeedViewModel", "News item not found for ID: $newsItemId")
                     }
                 } else {
-                    // Haberler henüz yüklenmemişse, kullanıcıyı bilgilendir
                     _newsDetail.value = ApiResult.Error(Exception("News items are not yet loaded"))
                     Log.e("FeedViewModel", "News items are not yet loaded")
                 }
             } catch (e: Exception) {
-                // Diğer hataları yakala
                 _newsDetail.value = ApiResult.Error(e)
                 Log.e("FeedViewModel", "Error fetching news item: ${e.message}")
             }
         }
     }
 
-
-    // Favori haberleri kaldırma
     fun removeFavorite(newsId: String) {
         viewModelScope.launch {
             favoriteManager.removeFavorite(newsId)
-            loadFavorites()  // Favoriler değiştikten sonra tekrar yüklüyoruz
+            loadFavorites()
         }
     }
-
-    // Arama sonuçları API çağrısı
-    fun searchArticles(query: String) {
-        viewModelScope.launch {
-            _searchResults.value = ApiResult.Loading  // Yükleme durumunu set ediyoruz
-
-            try {
-                val result = repository.searchArticles(query)
-                _searchResults.value = result  // Sonuçları set ediyoruz (Success/Error)
-            } catch (e: Exception) {
-                _searchResults.value = ApiResult.Error(e)
-                Log.e("FeedViewModel", "Error searching articles: ${e.message}")
-            }
-        }
-    }
-
-
 }

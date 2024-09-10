@@ -23,18 +23,15 @@ class LoginViewModel @Inject constructor(
     val loginState = _loginState.asStateFlow()
 
     fun login(email: String, password: String, onSuccess: () -> Unit) {
-        Log.d("SignInViewModel", "signIn called with email: $email")
         _loginState.value = LoginState.Loading
         viewModelScope.launch {
             val result = authRepository.signIn(email, password)
             if (result.isSuccess) {
-                Log.d("SignInViewModel", "signIn successful")
                 onSuccess()
                 authRepository.loadUserData(auth.currentUser!!.uid    )
                 _loginState.value = LoginState.Success("Sign in successful!")
             } else {
                 val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-                Log.d("SignInViewModel", "signIn failed with error: $errorMessage")
                 _loginState.value = LoginState.Error(errorMessage)
             }
         }

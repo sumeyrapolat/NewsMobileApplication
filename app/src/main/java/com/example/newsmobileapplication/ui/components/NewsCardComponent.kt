@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.newsmobileapplication.ui.theme.Platinum
-
 @Composable
 fun NewsCardComponent(
     newsTitle: String,
@@ -35,7 +34,7 @@ fun NewsCardComponent(
             .padding(12.dp)
             .fillMaxWidth()
             .clickable { onClick() }
-            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Card için ince gri border
+            .border(1.dp, Platinum, RoundedCornerShape(15.dp)),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -45,29 +44,26 @@ fun NewsCardComponent(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically // Görsel ve metinler dikeyde ortalanacak
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Sol taraftaki Görsel
             if (imageUrl != null) {
                 Image(
                     painter = rememberImagePainter(data = imageUrl),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(120.dp) // Görselin genişlik ve yüksekliği sabit
-                        .padding(end = 8.dp) // Görsel ile içerik arasında boşluk
-                    .clip(RoundedCornerShape(10.dp)), // Görselin kenarları yuvarlanıyor
+                        .size(120.dp)
+                        .padding(end = 8.dp)
+                        .clip(RoundedCornerShape(10.dp)),
                     contentScale = ContentScale.Crop
                 )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Sağ taraftaki Column: Section, Başlık ve Yazar bilgisi
             Column(
                 modifier = Modifier
-                    .fillMaxWidth() // Column'un tüm genişliği kaplaması için
+                    .fillMaxWidth()
             ) {
-                // Yazar bilgisi (Opsiyonel)
                 if (!newsAuthor.isNullOrEmpty()) {
                     Text(
                         text = "$newsAuthor",
@@ -79,7 +75,6 @@ fun NewsCardComponent(
 
                 Spacer(modifier = Modifier.height(3.dp))
 
-                // Başlık
                 Text(
                     text = newsTitle,
                     fontSize = 18.sp,
@@ -87,7 +82,7 @@ fun NewsCardComponent(
                     color = Color.Black,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = 4.dp) // Alt boşluk
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
 
                 Spacer(modifier = Modifier.height(3.dp))
@@ -95,15 +90,14 @@ fun NewsCardComponent(
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 4.dp), // Alt boşluk
+                        .padding(bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Section (Kategori)
                     Text(
                         text = newsSection,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.LightGray, // Kategoriyi farklı bir renkle ayırabiliriz
+                        color = Color.LightGray,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
 
@@ -111,7 +105,7 @@ fun NewsCardComponent(
                         text = newsDate,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.LightGray, // Kategoriyi farklı bir renkle ayırabiliriz
+                        color = Color.LightGray,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }

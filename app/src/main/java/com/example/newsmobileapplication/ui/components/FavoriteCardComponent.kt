@@ -37,14 +37,14 @@ fun FavoriteCardComponent(
     newsAuthor: String,
     imageUrl: String?,
     onClick: () -> Unit,
-    onRemoveClick: () -> Unit // Callback for removing from favorites
+    onRemoveClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp) // Card dışındaki padding
+            .padding(8.dp)
             .fillMaxWidth()
             .clickable { onClick() }
-            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Border ekleniyor
+            .border(1.dp, Platinum, RoundedCornerShape(15.dp)),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -52,13 +52,12 @@ fun FavoriteCardComponent(
     ) {
         Column(
             modifier = Modifier
-                .padding(12.dp) // Card içerisindeki bileşenler için padding
+                .padding(12.dp)
         ) {
-            // Image section with title and section over it
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp) // Görsel yüksekliği
+                    .height(250.dp)
                     .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                     .background(Color.Transparent)
             ) {
@@ -67,12 +66,11 @@ fun FavoriteCardComponent(
                         painter = rememberImagePainter(imageUrl),
                         contentDescription = null,
                         modifier = Modifier
-                            .fillMaxSize() // Tüm alanı kaplaması için
+                            .fillMaxSize()
                             .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
-                        contentScale = ContentScale.Crop // Görselin kesilmesini önlemek için
+                        contentScale = ContentScale.Crop
                     )
 
-                    // Overlay for section and title
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -81,7 +79,6 @@ fun FavoriteCardComponent(
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        // Section
                         Text(
                             text = newsSection.uppercase(),
                             fontSize = 14.sp,
@@ -94,7 +91,6 @@ fun FavoriteCardComponent(
 
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        // Title
                         Text(
                             text = newsTitle,
                             fontSize = 18.sp,
@@ -109,19 +105,16 @@ fun FavoriteCardComponent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Bottom section with date, author, and icon
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp), // Row ile üstteki bileşen arasında padding
+                    .padding(top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Date and Author with 7f weight
                 Column(
                     modifier = Modifier.weight(7f), // 7f weight
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // Date
                     Text(
                         text = formatDateTime(newsDate),
                         fontSize = 14.sp,
@@ -130,7 +123,6 @@ fun FavoriteCardComponent(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Author
                     Text(
                         text = newsAuthor,
                         fontSize = 14.sp,
@@ -138,30 +130,27 @@ fun FavoriteCardComponent(
                     )
                 }
 
-                // Favorite icon with 1f weight
                 IconButton(
                     onClick = onRemoveClick,
                     modifier = Modifier
-                        .weight(1f) // 1f weight
+                        .weight(1f)
                         .padding(8.dp)
                         .background(Color.LightGray.copy(0.5f), shape = RoundedCornerShape(50))
-                        .size(32.dp) // Circle background size
+                        .size(32.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Bookmark,
                         contentDescription = "Remove from favorites",
                         tint = Redwood,
-                        modifier = Modifier.size(18.dp) // Icon size suggestion
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
 
-
-            // News Content
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = newsContent, // No need for a null check since it's a non-nullable String
+                text = newsContent,
                 fontSize = 16.sp,
                 color = Color.Black,
                 maxLines = 3,

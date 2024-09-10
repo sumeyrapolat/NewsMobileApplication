@@ -30,19 +30,13 @@ class SignUpViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         val userID = auth.currentUser?.uid
                         val userEmail = auth.currentUser?.email
-                        Log.d("SignUpViewModel", "User ID: $userID")
-                        Log.d("SignUpViewModel", "User Email: $userEmail")
-                        Log.d("SignUpViewModel", "First Name: $firstName, Last Name: $lastName")
-
                         if (userID != null) {
                             saveUserToFirestore(userID, firstName, lastName, userEmail ?: email)
                         } else {
                             _signUpState.value = SignUpState.Error("User email not found")
-                            Log.e("SignUpViewModel", "User email not found")
                         }
                     } else {
                         _signUpState.value = SignUpState.Error(task.exception?.message ?: "Unknown error")
-                        Log.e("SignUpViewModel", "Error: ${task.exception?.message ?: "Unknown error"}")
                     }
                 }
         }
@@ -50,16 +44,13 @@ class SignUpViewModel @Inject constructor(
 
     private fun saveUserToFirestore(userID: String, firstName: String, lastName: String, email: String) {
         val signUpUser = User(firstName = firstName, lastName = lastName, email = email)
-        Log.d("SignUpViewModel", "Saving User: $signUpUser with ID: $userID")
 
         db.collection("Users").document(userID).set(signUpUser)
             .addOnSuccessListener {
-                Log.d("SignUpViewModel", "User saved to Firestore successfully")
                 _signUpState.value = SignUpState.Success("Sign up successful!")
             }
             .addOnFailureListener { e ->
                 _signUpState.value = SignUpState.Error("Failed to save user to Firestore: ${e.message}")
-                Log.e("SignUpViewModel", "Failed to save user to Firestore: ${e.message}")
             }
     }
 
