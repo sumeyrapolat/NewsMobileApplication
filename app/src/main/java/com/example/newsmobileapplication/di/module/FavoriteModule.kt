@@ -12,6 +12,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FavoriteModule {
 
+    // Provides a singleton instance of FavoriteManager
     @Provides
     @Singleton
     fun provideFavoriteManager(sharedPreferences: SharedPreferences): FavoriteManager {

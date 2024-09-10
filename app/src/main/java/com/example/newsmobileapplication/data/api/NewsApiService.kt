@@ -10,18 +10,17 @@ import retrofit2.http.Query
 
 interface NewsApiService {
 
-
+    // Fetches top stories from the specified section
     @GET("svc/topstories/v2/{section}.json")
     suspend fun getTopStories(
-        @Path("section") section: String,
+        @Path("section") section: String, // News section
         @Query("api-key") apiKey: String = BuildConfig.NEWS_API_KEY
     ): Response<NewsResponse>
 
-
-    // Article Search API için metod ekliyoruz
+    // Searches articles based on the provided query
     @GET("svc/search/v2/articlesearch.json")
     suspend fun searchArticles(
-        @Query("q") query: String, // Arama kelimesi
+        @Query("q") query: String, // Search term
         @Query("api-key") apiKey: String =  BuildConfig.NEWS_API_KEY
-    ): Response<ArticleSearchResponse> // Arama sonuçları için özel bir response sınıfı
+    ): Response<ArticleSearchResponse>
 }

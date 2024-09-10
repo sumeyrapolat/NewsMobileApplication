@@ -13,8 +13,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://api.nytimes.com/"
+    private const val BASE_URL = "https://api.nytimes.com/" // Base URL for the API
 
+    // Provides a singleton instance of Retrofit for making network requests
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -24,9 +25,11 @@ object NetworkModule {
             .build()
     }
 
+    // Provides a singleton instance of NewsApiService using Retrofit
     @Provides
     @Singleton
     fun provideNewsApiService(retrofit: Retrofit): NewsApiService {
         return retrofit.create(NewsApiService::class.java)
     }
 }
+

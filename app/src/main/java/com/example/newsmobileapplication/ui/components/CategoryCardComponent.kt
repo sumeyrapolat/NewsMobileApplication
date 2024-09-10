@@ -49,7 +49,7 @@ fun CategoryCardComponent(
     newsDate: String,
     newsAuthor: String,
     imageUrl: String?,
-    onClick: () -> Unit, // Read more button için tıklama callback'i
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -63,7 +63,6 @@ fun CategoryCardComponent(
             modifier = Modifier
                 .padding(12.dp)
         ) {
-            // Image with section and title
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,7 +80,6 @@ fun CategoryCardComponent(
                         contentScale = ContentScale.Crop
                     )
 
-                    // Overlay for section and title
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -90,7 +88,6 @@ fun CategoryCardComponent(
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        // Section
                         Text(
                             text = newsSection.uppercase(),
                             fontSize = 14.sp,
@@ -103,7 +100,6 @@ fun CategoryCardComponent(
 
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        // Title
                         Text(
                             text = newsTitle,
                             fontSize = 18.sp,
@@ -118,18 +114,15 @@ fun CategoryCardComponent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Bottom section with date and author
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Date and Author with 8f weight
                 Column(
-                    modifier = Modifier.weight(7f) // 8f weight
+                    modifier = Modifier.weight(7f)
                 ) {
-                    // Date
                     Text(
                         text = newsDate,
                         fontSize = 14.sp,
@@ -138,7 +131,6 @@ fun CategoryCardComponent(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Author
                     Text(
                         text = newsAuthor,
                         fontSize = 14.sp,
@@ -148,8 +140,6 @@ fun CategoryCardComponent(
 
             }
 
-
-            // News Content
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
@@ -162,7 +152,6 @@ fun CategoryCardComponent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Read More Button
             Button(
                 onClick = onClick,
                 modifier = Modifier.fillMaxWidth(),

@@ -58,7 +58,6 @@ fun CategoryScreen(
     val newsItems by feedViewModel.newsItems.collectAsState()
     val searchResults by categoryViewModel.searchResults.collectAsState()
 
-    // Varsayılan olarak kategoriye ait haberleri getiriyoruz
     LaunchedEffect(Unit) {
         feedViewModel.fetchNewsByCategory("World")
     }
@@ -66,7 +65,6 @@ fun CategoryScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Discover Başlık
         Text(
             text = "Discover",
             fontSize = 40.sp,
@@ -76,7 +74,6 @@ fun CategoryScreen(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        // Discover Alt Başlık
         Text(
             text = "News from all around the world",
             fontSize = 14.sp,
@@ -87,7 +84,6 @@ fun CategoryScreen(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        // Search Bar
         SearchBar(
             query = query,
             onQueryChange = {
@@ -108,7 +104,6 @@ fun CategoryScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         if (!isSearchActive) {
-            // Kategori sekmesi
             CategoryScrollableRow { selectedCategory ->
                 feedViewModel.fetchNewsByCategory(selectedCategory)
             }
@@ -116,7 +111,6 @@ fun CategoryScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Eğer arama aktifse, arama sonuçlarını göster
         if (isSearchActive) {
             when (searchResults) {
                 is ApiResult.Loading -> {

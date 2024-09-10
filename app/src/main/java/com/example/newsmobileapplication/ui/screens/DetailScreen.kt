@@ -54,17 +54,13 @@ fun NewsDetailScreen(
     newsItemId: String,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
-    Log.d("NewsDetailScreen", "News Item ID passed: $newsItemId")
 
     val newsItemsState by viewModel.newsItems.collectAsState()
     val isFavorite = remember { mutableStateOf(viewModel.isFavorite(newsItemId)) }
 
     LaunchedEffect(newsItemsState) {
         if (newsItemsState is ApiResult.Success) {
-            Log.d("NewsDetailScreen", "News items successfully loaded, fetching news detail for ID: $newsItemId")
             viewModel.fetchNewsItemById(newsItemId)
-        } else {
-            Log.d("NewsDetailScreen", "News items not loaded yet or error occurred")
         }
     }
 
@@ -78,7 +74,6 @@ fun NewsDetailScreen(
             ) {
                 CircularProgressIndicator(color = Color.Gray)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Loading news details...", color = Color.DarkGray, fontSize = 18.sp)
             }
         }
 
@@ -92,7 +87,7 @@ fun NewsDetailScreen(
                     if (!newsImageUrl.isNullOrEmpty()) {
                         Image(
                             painter = rememberAsyncImagePainter(model = newsImageUrl),
-                            contentDescription = "News Image",
+                            contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .graphicsLayer { alpha = 0.8f },
@@ -108,7 +103,7 @@ fun NewsDetailScreen(
                             .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(50))
                             .size(40.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null, tint = Color.Black)
                     }
 
                     IconButton(
@@ -124,7 +119,7 @@ fun NewsDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Bookmark,
-                            contentDescription = "Favorite",
+                            contentDescription = null,
                             tint = if (isFavorite.value) Color.Red else Color.Black
                         )
                     }
@@ -181,10 +176,8 @@ fun NewsDetailScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Read More Button
                                     Button(
                                         onClick = {
-                                            // Open the URL in the default browser
                                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.url))
                                             navController.context.startActivity(intent)
                                         },

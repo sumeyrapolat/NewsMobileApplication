@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsmobileapplication.model.repository.AuthRepository
+import com.example.newsmobileapplication.utils.PasswordResetState
+import com.example.newsmobileapplication.utils.ProfilePhotoState
+import com.example.newsmobileapplication.utils.UserDataState
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +38,6 @@ class AuthViewModel @Inject constructor(
 
     init {
         checkUserLoggedIn()
-        // Eğer kullanıcı giriş yapmışsa, önbellekteki verilerin yüklü olup olmadığını kontrol ediyoruz.
         if (_userLoggedInState.value) {
             loadCachedUserDataIfNeeded()
         }
@@ -82,7 +84,6 @@ class AuthViewModel @Inject constructor(
                         )
                         _userProfilePhotoUri.value = authRepository.getProfilePhotoUrl()?.let { Uri.parse(it) }
                     } else {
-                        Log.d("AuthViewModel", "User data is null.")
                         _userDataState.value = UserDataState.Error("User data is null")
                     }
                 } else {
@@ -91,12 +92,10 @@ class AuthViewModel @Inject constructor(
                         is FirebaseAuthInvalidUserException -> "User not found"
                         else -> "Unknown error"
                     }
-                    Log.d("AuthViewModel", "Error loading user data: $errorMessage")
                     _userDataState.value = UserDataState.Error(errorMessage)
                 }
             }
         } else {
-            Log.d("AuthViewModel", "User not logged in.")
             _userDataState.value = UserDataState.Error("User not logged in")
         }
     }
@@ -107,11 +106,9 @@ class AuthViewModel @Inject constructor(
             email = email,
             onSuccess = {
                 _passwordResetState.value = PasswordResetState.Success("Password reset email sent")
-                Log.d("AuthViewModel", "Password reset email sent successfully.")
             },
             onError = { errorMessage ->
                 _passwordResetState.value = PasswordResetState.Error(errorMessage)
-                Log.e("AuthViewModel", "Error sending password reset email: $errorMessage")
             }
         )
     }
@@ -120,7 +117,6 @@ class AuthViewModel @Inject constructor(
         authRepository.signOut()
         _userDataState.value = UserDataState.Error("User not logged in")
         _userLoggedInState.value = false
-        Log.d("AuthViewModel", "User signed out")
     }
 
 
@@ -140,34 +136,14 @@ class AuthViewModel @Inject constructor(
                 val result = authRepository.uploadProfilePhoto(userID, imageUri)
                 if (result.isSuccess) {
                     _profilePhotoState.value = ProfilePhotoState.Success(result.getOrNull()!!)
-                    _userProfilePhotoUri.value = imageUri // URI'yi güncelle
+                    _userProfilePhotoUri.value = imageUri
                 } else {
                     _profilePhotoState.value = ProfilePhotoState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
                 }
             }
         } else {
-            Log.e("AuthViewModel", "No user is currently logged in.")
             _profilePhotoState.value = ProfilePhotoState.Error("No user is currently logged in.")
         }
     }
 
-    sealed class ProfilePhotoState {
-        object Idle : ProfilePhotoState()
-        object Loading : ProfilePhotoState()
-        data class Success(val photoUrl: String) : ProfilePhotoState()
-        data class Error(val message: String) : ProfilePhotoState()
-    }
-
-    sealed class PasswordResetState {
-        object Idle : PasswordResetState()
-        object Loading : PasswordResetState()
-        data class Success(val message: String) : PasswordResetState()
-        data class Error(val message: String) : PasswordResetState()
-    }
-
-    sealed class UserDataState {
-        object Loading : UserDataState()
-        data class Success(val firstName: String, val lastName: String, val email: String) : UserDataState()
-        data class Error(val message: String) : UserDataState()
-    }
 }

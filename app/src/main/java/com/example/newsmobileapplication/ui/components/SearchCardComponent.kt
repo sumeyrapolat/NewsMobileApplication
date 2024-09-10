@@ -53,9 +53,9 @@ fun SearchCardComponent(
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp) // Card dışındaki padding
+            .padding(8.dp)
             .fillMaxWidth()
-            .border(1.dp, Platinum, RoundedCornerShape(15.dp)), // Border ekleniyor
+            .border(1.dp, Platinum, RoundedCornerShape(15.dp)),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -63,13 +63,12 @@ fun SearchCardComponent(
     ) {
         Column(
             modifier = Modifier
-                .padding(12.dp) // Card içerisindeki bileşenler için padding
+                .padding(12.dp)
         ) {
-            // Image section with title and section over it
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(280.dp) // Görsel yüksekliği
+                    .height(280.dp)
                     .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                     .background(Color.Transparent)
             ) {
@@ -78,12 +77,11 @@ fun SearchCardComponent(
                         painter = rememberImagePainter(imageUrl),
                         contentDescription = null,
                         modifier = Modifier
-                            .fillMaxSize() // Tüm alanı kaplaması için
+                            .fillMaxSize()
                             .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
-                        contentScale = ContentScale.Crop // Görselin kesilmesini önlemek için
+                        contentScale = ContentScale.Crop
                     )
 
-                    // Overlay for section and title
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -92,7 +90,6 @@ fun SearchCardComponent(
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        // Section
                         Text(
                             text = newsSection.uppercase(),
                             fontSize = 14.sp,
@@ -105,7 +102,7 @@ fun SearchCardComponent(
 
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        // Title
+
                         Text(
                             text = newsTitle,
                             fontSize = 18.sp,
@@ -120,19 +117,16 @@ fun SearchCardComponent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Bottom section with date, author, and icon
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp), // Row ile üstteki bileşen arasında padding
+                    .padding(top = 8.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Date and Author with 8f weight
                 Column(
-                    modifier = Modifier.weight(7f) // 8f weight
+                    modifier = Modifier.weight(7f)
                 ) {
-                    // Date
                     Text(
                         text = newsDate,
                         fontSize = 14.sp,
@@ -141,7 +135,6 @@ fun SearchCardComponent(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Author
                     Text(
                         text = newsAuthor,
                         fontSize = 14.sp,
@@ -150,11 +143,10 @@ fun SearchCardComponent(
                 }
             }
 
-            // News Content
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = newsAbstract, // No need for a null check since it's a non-nullable String
+                text = newsAbstract,
                 fontSize = 16.sp,
                 color = Color.Black,
                 maxLines = 3,
@@ -162,7 +154,6 @@ fun SearchCardComponent(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Read More Button
             Button(
                 onClick = onClick,
                 modifier = Modifier.fillMaxWidth(),

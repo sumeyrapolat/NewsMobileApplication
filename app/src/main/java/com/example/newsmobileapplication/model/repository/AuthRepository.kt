@@ -12,16 +12,14 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-
-
-
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
-    private val storage: FirebaseStorage // Firebase Storage referansı eklendi
+    private val storage: FirebaseStorage // Firebase Storage reference added
 ) {
     private var cachedUserData: User? = null
 
+    // Signs in the user with email and password
     suspend fun signIn(email: String, password: String): Result<FirebaseUser> {
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
@@ -31,37 +29,34 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    // Loads user data from Firestore using the userID
     suspend fun loadUserData(userID: String): Result<User> {
         return try {
             val document = db.collection("Users").document(userID).get().await()
-            Log.d("AuthRepository", "Document snapshot: $document")
-            Log.d("AuthRepository", "Fetching data for userID: $userID")
 
             if (document.exists()) {
                 val userData = document.toObject(User::class.java)
-                Log.d("AuthRepository", "User data: $userData")
 
                 userData?.let {
-                    cachedUserData = it  // Veriyi kaydet
-                    Log.d("AuthRepository", "Cached User Data: $cachedUserData")
+                    cachedUserData = it  // Cache the data
                     Result.success(it)
                 } ?: Result.failure(Exception("User data is null"))
             } else {
                 Result.failure(Exception("User data not found"))
             }
         } catch (e: FirebaseFirestoreException) {
-            Log.e("AuthRepository", "Firestore error: ${e.message}")
             Result.failure(e)
         } catch (e: Exception) {
-            Log.e("AuthRepository", "General error: ${e.message}")
             Result.failure(e)
         }
     }
 
+    // Returns cached user data if available
     fun getCachedUserData(): User? {
         return cachedUserData
     }
 
+    // Sends a password reset email to the specified email address
     fun sendPasswordResetEmail(email: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -72,44 +67,44 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    // Signs out the currently logged-in user
     fun signOut() {
         auth.signOut()
     }
 
+    // Checks if a user is currently logged in
     fun checkUserLoggedIn(): Boolean {
         return auth.currentUser != null
     }
 
+    // Returns the ID of the currently logged-in user, or null if no user is logged in
     fun getCurrentUserID(): String? {
         val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Log.e("AuthRepository", "No user is currently logged in.")
-            return null
-        }
-        return currentUser.uid
+        return currentUser?.uid
     }
 
+    // Uploads the profile photo to Firebase Storage and updates the user's profile photo URL in Firestore
     suspend fun uploadProfilePhoto(userID: String, imageUri: Uri): Result<String> {
         return try {
             val storageRef: StorageReference = storage.reference.child("profilePhotos/$userID.jpg")
             val uploadTask = storageRef.putFile(imageUri).await()
             val downloadUrl = storageRef.downloadUrl.await().toString()
 
-            // Fotoğraf URL'sini Firestore'a kaydet
+            // Save the photo URL to Firestore
             db.collection("Users").document(userID).update("profilePhotoUrl", downloadUrl).await()
 
             Result.success(downloadUrl)
         } catch (e: Exception) {
-            Log.e("AuthRepository", "Error uploading profile photo: ${e.message}")
             Result.failure(e)
         }
     }
 
+    // Returns the cached profile photo URL if available
     fun getProfilePhotoUrl(): String? {
         return cachedUserData?.profilePhotoUrl
     }
 
-    // AuthRepository'de mevcut kullanıcı verisini alma fonksiyonu
+    // Loads the current user's data based on their user ID
     suspend fun loadCurrentUserData(): Result<User> {
         val userId = getCurrentUserID()
         return if (userId != null) {
@@ -118,5 +113,4 @@ class AuthRepository @Inject constructor(
             Result.failure(Exception("No user logged in"))
         }
     }
-
 }

@@ -53,7 +53,7 @@ fun SearchBar(
         trailingIcon = {
             IconButton(onClick = { onSearch() }) {
                 Icon(
-                    imageVector = Icons.Default.Search, // Arama ikonu ekleniyor
+                    imageVector = Icons.Default.Search,
                     contentDescription = "Search Icon"
                 )
             }
