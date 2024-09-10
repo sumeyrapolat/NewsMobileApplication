@@ -36,8 +36,6 @@ Rubu+News, kullanıcıların e-posta ve şifre ile giriş yapmasını sağlar, h
 ## Ekran Görüntüleri:
 Aşağıda uygulamanın bazı ekran görüntülerini bulabilirsiniz:
 
-## Ekran Görüntüleri:
-
 ### 1. Signup ve Login Ekranları:
 ![Signup ve Login](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/icon-signup-login.jpg)
 
@@ -87,3 +85,88 @@ Aşağıda uygulamanın bazı ekran görüntülerini bulabilirsiniz:
 Bu proje MIT Lisansı ile lisanslanmıştır.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# RubuPlus Android Test Case
+
+Rubu+News allows users to log in with email and password, list news articles, and access detailed news content. Users can also add news articles to their favorites and view their favorite news. The app uses the **New York Times Top Stories** and **Article Search** APIs to provide the latest news.
+
+## Features:
+- User login (Email and Password)
+- Password reset function (Forgot Password)
+- "Remember Me" feature for automatic login
+- User registration
+- News list and detail screens
+- Add news articles to favorites and view them in the favorites screen
+- Filter news by category
+- News search function
+- Advanced API and log management
+
+  ## Setup:
+1. Clone the project:
+   ```bash
+   git clone https://github.com/your-repository/RubuPlusAndroidTestCase.git
+2. Open the project in Android Studio.
+3. Sync the project to download the required dependencies.
+4. Run the application on an Android device or emulator.
+
+## Usage:
+- Upon opening the app, the user is greeted with a login screen.
+- The user can log in with their email and password or reset their password using the "Forgot Password" link if needed.
+- The "Remember Me" feature allows the user to be automatically recognized on subsequent logins.
+- If not registered, the user can create a new account and log in.
+- On the main screen, news fetched from the New York Times is listed.
+- In the categories screen, the user can filter news by various categories.
+- By clicking on a news item, the user can view more details and add the article to their favorites.
+- News added to favorites will be displayed in the favorites screen.
+- Users can also utilize the search function to look for specific articles.
+- To read the full article, the user can click the Read More button, which opens the news site in the device's default browser.
+
+## Screenshots:
+Below are some screenshots of the application:
+
+### 1. Signup and Login Screens:
+![Signup and Login](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/icon-signup-login.jpg)
+
+### 2. Login and Feed Screens:
+![Login and Feed](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/login-signup-feed.jpg)
+
+### 3. Feed and Read More Screen:
+![Feed and Read More](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/feed-detail-readmore.jpg)
+
+### 4. Category, Search, and Detail Screen:
+![Category, Search, and Detail](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/category-search-detail.jpg)
+
+### 5. Detail and Favorites Screen:
+![Detail and Favorites](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/detail-favorite.jpg)
+
+### 6. Feed and Sign Out, Login Screens:
+![Feed and Sign Out, Login](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/feed-signout-login.jpg)
+
+### 7. Control Screens:
+![Control Screens](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/controll-screens.jpg)
+
+### 8. Password Reset Screen:
+![Password Reset](app/src/main/java/com/example/newsmobileapplication/Images/presentationImages/resetpassword.jpg)
+
+## Technologies Used:
+- **Kotlin**: Programming language for Android development
+- **MVVM Architecture**: Core architecture of the project
+- **Retrofit**: For handling API requests
+- **Dagger Hilt**: For dependency injection
+- **Firebase Authentication**: For user login and registration
+- **Firebase Storage**: To store user data
+- **New York Times API**: For news articles
+
+## API Enhancements:
+- The application uses two different **New York Times APIs**: **Top Stories** and **Article Search**.
+- Error handling and success states have been improved for API requests.
+- **Retrofit** has been used to manage API requests, and API keys are securely handled using `buildConfigField` for both APIs.
+- **SerializedName** annotations ensure compatibility between API models and JSON data formats, preventing issues when fetching data.
+- The Proguard configuration has been set up to protect API keys and remove log messages.
+
+### Improvements Made:
+- Managed API keys using **buildConfigField** and set up `proguard-rules.pro` to remove log messages.
+- Enhanced error handling and success states for API requests.
+- All logs are disabled in the release build using Proguard.
+
+## License:
+This project is licensed under the MIT License.
